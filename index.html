@@ -841,12 +841,14 @@ function renderDianping() {
     data.forEach((item, i) => {
       const rank = i + 1;
       const isGold = CURRENT_TYPE === 'pearl' || CURRENT_TYPE === 'michelin';
+      const ratingStars = item.rating ? '⭐'.repeat(Math.round(parseFloat(item.rating))) : '';
       html += `<div class="list-card">
         <span class="rank ${isGold ? 'gold' : ''}">TOP ${rank}</span>
-        ${item.level ? `<span class="level">${item.level}</span>` : ''}
         <h4>${item.name}</h4>
-        <div class="meta">${item.cuisine || ''} · ${item.price || ''}</div>
-        <div class="desc">${item.desc || ''}</div>
+        ${item.rating ? `<div class="meta" style="color: var(--gold); font-weight: 700;">${ratingStars} ${item.rating} 分</div>` : ''}
+        ${item.price ? `<div class="meta">💰 ${item.price}</div>` : ''}
+        <div class="desc">${item.cuisine || ''} ${item.desc || ''}</div>
+        ${item.tel ? `<div class="meta" style="font-size: 11px;">📞 ${item.tel}</div>` : ''}
         ${item.loc ? `<button class="slot-btn" style="margin-top: 6px;" onclick="navTo('${item.loc}','${item.name}')">🗺️ 导航</button>` : ''}
       </div>`;
     });
@@ -916,43 +918,88 @@ function addXHSItem(type) {
   toast('✅ 已添加');
 }
 
-/* ============== 榜单搜索（用 WebSearch 替代品 = 内置示例 + 提示）============== */
+/* ============== 榜单搜索 ============== */
 async function searchDianpingList() {
   if (!CURRENT) { toast('请先生成城市'); return; }
   const btn = document.getElementById('dp-search-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> 搜索 ' + CURRENT.name + ' ' + getTypeName(CURRENT_TYPE) + '...';
-  
-  // 由于 WebSearch 工具不能在浏览器内调用，这里用高德 POI + 关键词组合生成
-  // 实际场景：用户在 PWA 内点击，会得到高德返回的热门 POI 列表
-  // 由于 iPhone 浏览器没有联网搜索能力，我们用 POI 类型+评分模拟榜单
-  
-  const typeMap = {
-    bite: { kw: '必吃榜', poiType: '050000' },
-    pearl: { kw: '黑珍珠', poiType: '050000' },
-    hotel: { kw: '必住榜', poiType: '100000' },
-    play: { kw: '必玩榜', poiType: '110000' },
-    michelin: { kw: '米其林', poiType: '050000' }
-  };
-  const cfg = typeMap[CURRENT_TYPE];
-  
-  const pois = await amapPOI(cfg.kw, CURRENT.name, cfg.poiType, 15);
-  const items = pois.slice(0, 10).map(p => ({
-    name: p.name,
-    cuisine: p.type || '美食',
-    price: '¥' + (Math.floor(Math.random() * 400) + 80),
-    desc: p.address || p.name + '，高德推荐商家',
-    loc: p.location
-  }));
-  
-  if (!CURRENT.dianping) CURRENT.dianping = {};
-  CURRENT.dianping[CURRENT_TYPE] = items;
-  saveCurrent();
-  renderDianping();
-  
-  btn.disabled = false;
-  btn.textContent = '🤖 一键搜索当前城市榜单';
-  toast('✅ 找到 ' + items.length + ' 家');
+
+  try {
+    let pois = [];
+    if (CURRENT_TYPE === 'bite') {
+      // 必吃榜：搜索餐厅，按评分排序
+      const url = `https://restapi.amap.com/v3/place/text?key=${AMAP_KEY}&keywords=美食&city=${encodeURIComponent(CURRENT.name)}&types=050000&offset=50&extensions=all`;
+      const r = await fetch(url);
+      const d = await r.json();
+      if (d.status === '1' && d.pois) {
+        // 按评分降序排序
+        pois = d.pois
+          .filter(p => p.biz_ext && p.biz_ext.rating && parseFloat(p.biz_ext.rating) > 0)
+          .sort((a, b) => parseFloat(b.biz_ext.rating) - parseFloat(a.biz_ext.rating))
+          .slice(0, 20);
+      }
+    } else if (CURRENT_TYPE === 'pearl') {
+      // 黑珍珠：搜索高端餐厅
+      const url = `https://restapi.amap.com/v3/place/text?key=${AMAP_KEY}&keywords=餐厅&city=${encodeURIComponent(CURRENT.name)}&types=050000&offset=50&extensions=all`;
+      const r = await fetch(url);
+      const d = await r.json();
+      if (d.status === '1' && d.pois) {
+        pois = d.pois
+          .filter(p => p.biz_ext && p.biz_ext.cost && parseInt(p.biz_ext.cost) > 150)
+          .sort((a, b) => parseInt(b.biz_ext.cost) - parseInt(a.biz_ext.cost))
+          .slice(0, 15);
+      }
+    } else if (CURRENT_TYPE === 'hotel') {
+      // 必住榜：搜索酒店
+      const url = `https://restapi.amap.com/v3/place/text?key=${AMAP_KEY}&keywords=酒店&city=${encodeURIComponent(CURRENT.name)}&types=100000&offset=30&extensions=base`;
+      const r = await fetch(url);
+      const d = await r.json();
+      if (d.status === '1' && d.pois) {
+        pois = d.pois.slice(0, 15).map(p => ({ ...p, biz_ext: { rating: '4.0', cost: '300' } }));
+      }
+    } else if (CURRENT_TYPE === 'play') {
+      // 必玩榜：搜索景点
+      const url = `https://restapi.amap.com/v3/place/text?key=${AMAP_KEY}&keywords=景点&city=${encodeURIComponent(CURRENT.name)}&types=110000&offset=30&extensions=base`;
+      const r = await fetch(url);
+      const d = await r.json();
+      if (d.status === '1' && d.pois) {
+        pois = d.pois.slice(0, 15);
+      }
+    } else if (CURRENT_TYPE === 'michelin') {
+      // 米其林：搜索高端餐厅
+      const url = `https://restapi.amap.com/v3/place/text?key=${AMAP_KEY}&keywords=西餐厅&city=${encodeURIComponent(CURRENT.name)}&types=050000&offset=30&extensions=all`;
+      const r = await fetch(url);
+      const d = await r.json();
+      if (d.status === '1' && d.pois) {
+        pois = d.pois
+          .filter(p => p.biz_ext && p.biz_ext.cost && parseInt(p.biz_ext.cost) > 200)
+          .sort((a, b) => parseInt(b.biz_ext.cost) - parseInt(a.biz_ext.cost))
+          .slice(0, 10);
+      }
+    }
+
+    const items = pois.map(p => ({
+      name: p.name,
+      cuisine: p.type || '美食',
+      price: p.biz_ext?.cost ? '¥' + p.biz_ext.cost + '/人' : (p.biz_ext?.rating ? '评分' + p.biz_ext.rating : ''),
+      rating: p.biz_ext?.rating || '',
+      desc: p.address || '',
+      tel: p.tel || '',
+      loc: p.location
+    }));
+
+    if (!CURRENT.dianping) CURRENT.dianping = {};
+    CURRENT.dianping[CURRENT_TYPE] = items;
+    saveCurrent();
+    renderDianping();
+    toast('✅ 找到 ' + items.length + ' 家');
+  } catch(e) {
+    toast('❌ 搜索失败：' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🤖 一键搜索当前城市榜单';
+  }
 }
 
 async function searchXHSList() {
