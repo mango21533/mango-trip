@@ -10,7 +10,7 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='48' fill='%23ff2442'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='central' text-anchor='middle' font-size='140'%3E%F0%9F%8D%8D%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='48' fill='%23ff2442'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='central' text-anchor='middle' font-size='140'%3E%F0%9F%8D%8D%3C/text%3E%3C/svg%3E">
-<title>芒果出行 · 宁波三日游</title>
+<title>芒果出行 · 任意城市任意天数</title>
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
@@ -48,892 +48,273 @@
   button { font-family: inherit; cursor: pointer; border: none; background: none; }
   a { color: inherit; text-decoration: none; }
 
-  /* ===== App Shell ===== */
-  .app {
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
-    padding-bottom: 80px;
-    position: relative;
-    background: var(--paper);
-  }
+  .app { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 80px; position: relative; background: var(--paper); }
 
-  /* ===== Top Bar ===== */
   .topbar {
-    position: sticky;
-    top: 0;
-    z-index: 50;
+    position: sticky; top: 0; z-index: 50;
     background: rgba(244, 237, 224, 0.92);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     border-bottom: 1px solid var(--ink-line);
   }
-  .brand {
-    display: flex; align-items: center; gap: 8px;
-  }
+  .brand { display: flex; align-items: center; gap: 8px; }
   .brand-mark { font-size: 24px; line-height: 1; }
-  .brand-name {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 17px; font-weight: 900; letter-spacing: 2px;
-    color: var(--cinnabar);
-  }
+  .brand-name { font-family: 'Noto Serif SC', serif; font-size: 17px; font-weight: 900; letter-spacing: 2px; color: var(--cinnabar); }
   .topbar-actions { display: flex; gap: 8px; }
   .icon-btn {
     width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(26, 24, 20, 0.05);
-    color: var(--ink); display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
+    background: rgba(26, 24, 20, 0.05); color: var(--ink);
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
   }
   .icon-btn:active { background: var(--ink); color: var(--paper); }
 
-  /* ===== Pages ===== */
   .page { display: none; padding: 0 20px 20px; animation: fadeIn .3s ease; }
   .page.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
-  /* ===== Hero ===== */
-  .hero {
-    padding: 28px 0 24px;
-    text-align: left;
-    position: relative;
-  }
-  .hero .badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 11px; letter-spacing: 2px; font-weight: 700;
-    background: var(--ink); color: var(--xhs-yellow);
-    padding: 5px 12px; border-radius: 100px;
-    margin-bottom: 16px;
+  .hero { padding: 28px 0 24px; }
+  .badge {
+    display: inline-block; background: var(--ink); color: var(--xhs-yellow);
+    padding: 3px 10px; font-size: 11px; letter-spacing: 2px; font-weight: 700;
   }
   .hero h1 {
     font-family: 'Noto Serif SC', serif;
-    font-size: 38px; font-weight: 900; line-height: 1.05; letter-spacing: -1px;
+    font-size: 36px; font-weight: 900; line-height: 1.15; margin: 12px 0 6px;
     color: var(--ink);
   }
-  .hero h1 .accent { color: var(--cinnabar); font-style: italic; }
   .hero .sub {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic; font-size: 18px;
-    color: var(--ink-soft); margin-top: 10px;
-  }
-  .hero-tags {
-    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px;
-  }
-  .hero-tag {
-    font-size: 12px; padding: 5px 12px;
-    background: white; border: 1px solid var(--ink-line);
-    border-radius: 100px;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    color: var(--cinnabar); letter-spacing: 1px; font-size: 15px;
   }
 
-  /* ===== Stats Strip ===== */
-  .stats {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    background: white; border-radius: 18px; padding: 16px 0;
-    box-shadow: var(--shadow); margin-bottom: 24px;
+  /* ===== Generator Panel ===== */
+  .gen-panel {
+    background: white; border: 1px solid var(--ink);
+    padding: 18px; margin-bottom: 20px;
+    box-shadow: 5px 5px 0 var(--ink);
+    position: relative;
   }
-  .stat-item { text-align: center; border-right: 1px solid var(--ink-line); }
-  .stat-item:last-child { border-right: none; }
-  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--cinnabar); }
-  .stat-label { font-size: 10px; letter-spacing: 1.5px; color: var(--ink-soft); margin-top: 2px; text-transform: uppercase; }
+  .gen-panel::before {
+    content: '🥭 GENERATOR';
+    position: absolute; top: -10px; left: 14px;
+    background: var(--cinnabar); color: white;
+    padding: 2px 10px; font-size: 10px; letter-spacing: 2px; font-weight: 700;
+  }
+  .gen-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .gen-row:last-child { margin-bottom: 0; }
+  .gen-field { flex: 1; }
+  .gen-label {
+    display: block; font-size: 11px; color: var(--ink-soft);
+    letter-spacing: 1px; margin-bottom: 4px; font-weight: 700;
+  }
+  .gen-input, .gen-select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--ink-line);
+    background: var(--paper-2); font-size: 15px; font-family: inherit;
+    color: var(--ink); border-radius: 0;
+  }
+  .gen-input:focus, .gen-select:focus { outline: 2px solid var(--cinnabar); }
+  .gen-stepper { display: flex; align-items: stretch; }
+  .gen-stepper button {
+    width: 36px; background: var(--ink); color: var(--paper);
+    font-size: 18px; font-weight: 700;
+  }
+  .gen-stepper input { flex: 1; text-align: center; }
+  .gen-btn {
+    width: 100%; padding: 14px; background: var(--cinnabar); color: white;
+    font-size: 15px; font-weight: 700; letter-spacing: 4px; margin-top: 12px;
+    transition: transform .1s;
+  }
+  .gen-btn:active { transform: scale(0.98); background: var(--ink); }
+  .gen-btn[disabled] { background: var(--ink-soft); cursor: not-allowed; }
+  .gen-tip { font-size: 11px; color: var(--ink-soft); margin-top: 8px; line-height: 1.5; }
+  .gen-status {
+    display: none; padding: 12px; background: var(--paper-2);
+    border-left: 3px solid var(--cinnabar); margin-top: 12px;
+    font-size: 12px; line-height: 1.6;
+  }
+  .gen-status.show { display: block; }
+  .gen-status.error { border-left-color: var(--xhs-red); background: #fff3f5; }
 
-  /* ===== Day Section ===== */
-  .day-section { margin-bottom: 32px; }
-  .day-head {
-    display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
-  }
+  .stat-bar { display: flex; padding: 16px 0; border-top: 1px solid var(--ink-line); border-bottom: 1px solid var(--ink-line); margin-bottom: 20px; }
+  .stat-item { flex: 1; text-align: center; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--cinnabar); }
+  .stat-label { font-size: 10px; letter-spacing: 2px; color: var(--ink-soft); margin-top: 2px; }
+
+  .day-section { margin-bottom: 28px; }
+  .day-head { display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start; }
   .day-num {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 48px; font-weight: 600; line-height: 1;
-    color: var(--cinnabar); font-style: italic;
+    font-size: 64px; font-weight: 600; line-height: 0.9;
+    color: var(--cinnabar); flex-shrink: 0;
   }
-  .day-title { flex: 1; }
-  .day-title h2 {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 19px; font-weight: 900; line-height: 1.2;
-  }
-  .day-title .vibe {
-    font-size: 11px; color: var(--ink-soft); margin-top: 4px;
-    letter-spacing: 0.5px;
-  }
+  .day-title h2 { font-family: 'Noto Serif SC', serif; font-size: 22px; font-weight: 900; line-height: 1.2; margin-bottom: 4px; }
+  .day-title .vibe { font-size: 12px; color: var(--ink-soft); letter-spacing: 1px; }
+  .day-date { font-size: 11px; color: var(--cinnabar); font-weight: 700; margin-top: 4px; letter-spacing: 1px; }
 
-  /* ===== Slot Card ===== */
   .slot {
-    background: white; border-radius: 16px; padding: 14px 16px;
-    margin-bottom: 12px; box-shadow: var(--shadow-card);
-    position: relative; transition: all .2s;
+    background: white; border: 1px solid var(--ink-line);
+    padding: 14px; margin-bottom: 10px;
+    transition: all .2s;
   }
-  .slot.checked { background: rgba(74, 122, 94, 0.06); }
-  .slot.checked .slot-name { text-decoration: line-through; opacity: 0.5; }
-  .slot-head {
-    display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    margin-bottom: 8px;
-  }
-  .slot-time {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px; font-weight: 600; color: var(--cinnabar);
-    font-style: italic;
-  }
-  .slot-tag {
-    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
-    padding: 3px 8px; border-radius: 4px;
-  }
-  .slot-tag.food { background: var(--cinnabar); color: white; }
-  .slot-tag.shoot { background: var(--jade); color: white; }
-  .slot-tag.treasure { background: var(--xhs-red); color: white; }
-  .slot-tag.stay { background: var(--ink); color: var(--xhs-yellow); }
-  .slot-name {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 16px; font-weight: 900; line-height: 1.3;
-  }
-  .slot-sub { font-size: 11px; color: var(--ink-soft); margin-top: 3px; }
-  .slot-desc { font-size: 13px; line-height: 1.6; margin-top: 8px; color: var(--ink); }
-  .slot-foot {
-    display: flex; align-items: center; justify-content: space-between; margin-top: 10px;
-    padding-top: 10px; border-top: 1px dashed var(--ink-line);
-  }
+  .slot.checked { background: var(--paper-2); opacity: 0.65; }
+  .slot.checked .slot-name { text-decoration: line-through; }
+  .slot-head { display: flex; gap: 10px; align-items: center; margin-bottom: 6px; }
+  .slot-time { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 15px; color: var(--cinnabar); }
+  .slot-tag { font-size: 10px; letter-spacing: 1px; padding: 2px 6px; font-weight: 700; }
+  .slot-tag.food { background: #fff3ed; color: var(--cinnabar); }
+  .slot-tag.shoot { background: #e8f3ed; color: var(--jade); }
+  .slot-tag.stay { background: #fef5e7; color: var(--gold); }
+  .slot-tag.pearl { background: #1a1814; color: var(--xhs-yellow); }
+  .slot-name { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+  .slot-sub { font-size: 10px; color: var(--ink-soft); letter-spacing: 1px; margin-bottom: 8px; }
+  .slot-desc { font-size: 13px; line-height: 1.6; color: var(--ink); }
+  .slot-desc strong { color: var(--cinnabar); }
+  .slot-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--ink-line); }
   .slot-meta { font-size: 11px; color: var(--ink-soft); }
   .slot-actions { display: flex; gap: 6px; }
-  .slot-btn {
-    font-size: 11px; font-weight: 700; padding: 5px 10px;
-    border-radius: 100px; background: var(--paper-2); color: var(--ink);
-    display: inline-flex; align-items: center; gap: 4px;
-  }
+  .slot-btn { font-size: 11px; padding: 5px 10px; background: var(--paper-2); color: var(--ink); font-weight: 700; letter-spacing: 1px; }
   .slot-btn:active { background: var(--ink); color: var(--paper); }
   .slot-btn.primary { background: var(--cinnabar); color: white; }
   .slot-btn.primary:active { background: var(--ink); }
+  .slot-btn.primary.checked { background: var(--jade); }
 
-  /* ===== Bomb Alert (踩雷) ===== */
-  .bomb {
-    background: #fff5f3; border-left: 3px solid var(--cinnabar);
-    padding: 10px 14px; border-radius: 0 12px 12px 0; margin: 12px 0;
-    font-size: 12px; line-height: 1.5;
-  }
-  .bomb strong { color: var(--cinnabar); }
+  .bomb { background: #fff3ed; border-left: 3px solid var(--xhs-red); padding: 10px 12px; font-size: 12px; line-height: 1.6; margin: 10px 0; }
+  .bomb strong { color: var(--xhs-red); }
 
-  /* ===== Hidden Spot ===== */
-  .hidden {
-    background: linear-gradient(135deg, #fff8e6, #fff3cc);
-    border-radius: 12px; padding: 12px 14px; margin: 10px 0;
-    font-size: 12px; line-height: 1.5;
-  }
-  .hidden strong { color: var(--gold); }
+  .section-title { font-family: 'Noto Serif SC', serif; font-size: 28px; font-weight: 900; margin: 32px 0 16px; display: flex; align-items: center; gap: 12px; }
+  .section-title::before { content: ''; width: 4px; height: 24px; background: var(--cinnabar); }
+  .section-en { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--ink-soft); font-size: 13px; letter-spacing: 2px; margin-bottom: 20px; padding-left: 16px; }
 
-  /* ===== Section Title ===== */
-  .section-title {
-    display: flex; align-items: center; gap: 10px; margin: 32px 0 16px;
-  }
-  .section-title .badge {
-    background: var(--xhs-red); color: white; font-size: 11px;
-    font-weight: 700; letter-spacing: 2px; padding: 4px 10px; border-radius: 4px;
-  }
-  .section-title .badge.jade { background: var(--jade); }
-  .section-title .badge.ink { background: var(--ink); color: var(--xhs-yellow); }
-  .section-title h2 {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 22px; font-weight: 900;
-  }
+  .stay-card { background: white; border: 1px solid var(--ink); margin-bottom: 12px; overflow: hidden; box-shadow: 5px 5px 0 var(--ink); }
+  .stay-head { padding: 14px 16px; color: white; display: flex; align-items: center; }
+  .stay-head .num { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; margin-right: 12px; line-height: 1; }
+  .stay-head .info { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 700; }
+  .stay-head .sub { font-size: 10px; letter-spacing: 1px; opacity: 0.85; margin-top: 2px; }
+  .stay-body { padding: 14px 16px; }
+  .stay-body h4 { font-family: 'Noto Serif SC', serif; font-size: 15px; font-weight: 900; margin-bottom: 4px; }
+  .stay-body .addr { font-size: 11px; color: var(--ink-soft); margin-bottom: 6px; }
+  .stay-body .desc { font-size: 12px; line-height: 1.6; margin-bottom: 8px; }
+  .stay-body .price { font-size: 11px; color: var(--ink-soft); display: flex; justify-content: space-between; padding-top: 6px; border-top: 1px dashed var(--ink-line); }
 
-  /* ===== Stay Card ===== */
-  .stay-card {
-    background: white; border-radius: 16px; overflow: hidden;
-    box-shadow: var(--shadow); margin-bottom: 14px;
-  }
-  .stay-banner {
-    padding: 16px 18px; color: white; position: relative;
-  }
-  .stay-banner.night-1 { background: linear-gradient(135deg, var(--cinnabar), var(--cinnabar-light)); }
-  .stay-banner.night-3 { background: linear-gradient(135deg, var(--jade), var(--jade-light)); }
-  .stay-banner.alt { background: linear-gradient(135deg, #1a3a5c, #2c5a8c); }
-  .stay-banner .num { font-size: 10px; letter-spacing: 2px; opacity: 0.9; }
-  .stay-banner h3 {
-    font-family: 'Noto Serif SC', serif; font-size: 20px; font-weight: 900;
-    margin-top: 4px;
-  }
-  .stay-banner .area { font-size: 11px; opacity: 0.9; margin-top: 2px; }
-  .stay-body { padding: 14px 18px; }
-  .stay-name {
-    font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 900;
-    margin-bottom: 4px;
-  }
-  .stay-addr { font-size: 11px; color: var(--ink-soft); margin-bottom: 10px; }
-  .stay-addr .tag {
-    display: inline-block; background: var(--cinnabar); color: white;
-    font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 6px;
-  }
-  .stay-addr .tag.jade { background: var(--jade); }
-  .stay-desc { font-size: 13px; line-height: 1.55; margin-bottom: 10px; }
-  .stay-foot {
-    display: flex; justify-content: space-between; align-items: center;
-    padding-top: 10px; border-top: 1px dashed var(--ink-line);
-    font-size: 11px; color: var(--ink-soft);
-  }
-
-  /* ===== Route Section ===== */
-  .route-day {
-    background: white; border-radius: 16px; padding: 18px; margin-bottom: 16px;
-    box-shadow: var(--shadow-card);
-  }
-  .route-day h3 {
-    font-family: 'Noto Serif SC', serif; font-size: 17px; font-weight: 900;
-    margin-bottom: 4px;
-  }
-  .route-day .sub { font-size: 11px; color: var(--ink-soft); margin-bottom: 16px; }
-  .route-flow { position: relative; }
-  .route-node {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 8px 0;
-  }
-  .route-dot {
-    width: 14px; height: 14px; border-radius: 50%;
-    background: var(--cinnabar); flex-shrink: 0; margin-top: 4px;
-    border: 3px solid var(--paper-2);
-  }
+  .route-page { padding: 0 20px 20px; }
+  .route-day { background: white; border: 1px solid var(--ink-line); padding: 16px; margin-bottom: 16px; box-shadow: 4px 4px 0 var(--ink-line); }
+  .route-day-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .route-day-head .num { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--cinnabar); }
+  .route-day-head h3 { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 900; }
+  .route-flow { padding-left: 8px; }
+  .route-node { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+  .route-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--cinnabar); flex-shrink: 0; box-shadow: 0 0 0 3px var(--paper); }
   .route-dot.shoot { background: var(--jade); }
-  .route-dot.treasure { background: var(--xhs-red); }
-  .route-dot.stay { background: var(--ink); }
+  .route-dot.stay { background: var(--gold); }
+  .route-dot.treasure { background: var(--ink); }
   .route-info { flex: 1; }
-  .route-info .name { font-family: 'Noto Serif SC', serif; font-size: 14px; font-weight: 700; }
-  .route-info .time { font-size: 11px; color: var(--ink-soft); }
-  .route-line {
-    margin-left: 6px; width: 2px; height: 24px; background: var(--ink-line);
-    position: relative;
-  }
-  .route-line::after {
-    content: attr(data-label);
-    position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
-    font-size: 11px; color: var(--cinnabar); font-weight: 700;
-    background: var(--paper-2); padding: 2px 8px; border-radius: 100px;
-    white-space: nowrap;
-  }
-  .route-summary {
-    background: var(--paper-2); border-radius: 10px; padding: 10px 14px;
-    font-size: 12px; line-height: 1.6; margin-top: 12px;
-  }
+  .route-info .name { font-size: 13px; font-weight: 700; }
+  .route-info .time { font-size: 10px; color: var(--ink-soft); margin-top: 1px; }
+  .route-line { margin-left: 6px; border-left: 2px dashed var(--ink-line); height: 28px; position: relative; }
+  .route-line::before { content: attr(data-label); position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 10px; color: var(--cinnabar); background: white; padding: 0 6px; font-weight: 700; }
+  .route-loading { font-size: 10px; color: var(--ink-soft); font-style: italic; }
+  .route-summary { background: var(--paper-2); padding: 14px; font-size: 12px; line-height: 1.6; border-left: 3px solid var(--cinnabar); margin-top: 16px; }
 
-  /* ===== Favorites Page ===== */
-  .empty {
-    text-align: center; padding: 60px 20px;
-    color: var(--ink-soft);
-  }
-  .empty .icon { font-size: 48px; margin-bottom: 12px; }
-  .empty p { font-size: 13px; line-height: 1.6; }
-  .fav-item {
-    background: white; border-radius: 12px; padding: 12px 14px;
-    margin-bottom: 10px; box-shadow: var(--shadow-card);
-    display: flex; align-items: center; gap: 12px;
-  }
-  .fav-item .emoji { font-size: 24px; }
-  .fav-item .body { flex: 1; }
-  .fav-item .name { font-family: 'Noto Serif SC', serif; font-size: 14px; font-weight: 700; }
-  .fav-item .day { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
-  .fav-item .remove {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: rgba(200, 65, 42, 0.1); color: var(--cinnabar);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-  }
-
-  /* ===== Map Page ===== */
-  .map-link {
-    display: block; background: white; border-radius: 14px;
-    padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow-card);
-    text-decoration: none; color: var(--ink);
-  }
-  .map-link:active { background: var(--paper-2); }
-  .map-link .name {
-    font-family: 'Noto Serif SC', serif; font-size: 15px; font-weight: 700;
-  }
-  .map-link .addr { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
-  .map-link .arrow { float: right; color: var(--cinnabar); font-weight: 700; }
-
-  /* ===== About Page ===== */
-  .about-card {
-    background: white; border-radius: 16px; padding: 20px;
-    box-shadow: var(--shadow); margin-bottom: 14px;
-  }
-  .about-card h3 {
-    font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 900;
-    margin-bottom: 10px; color: var(--cinnabar);
-  }
-  .about-card p, .about-card li {
-    font-size: 13px; line-height: 1.7; color: var(--ink);
-  }
+  .about-card { background: white; border: 1px solid var(--ink-line); padding: 16px; margin-bottom: 12px; }
+  .about-card h3 { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 900; margin-bottom: 8px; }
+  .about-card p, .about-card li { font-size: 13px; line-height: 1.7; }
   .about-card ul { padding-left: 18px; }
+  .about-card strong { color: var(--cinnabar); }
 
-  /* ===== Bottom Tab Bar ===== */
   .tabbar {
-    position: fixed; bottom: 0; left: 0; right: 0;
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 480px; z-index: 100;
     background: rgba(244, 237, 224, 0.95);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border-top: 1px solid var(--ink-line);
     padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
-    z-index: 100;
   }
-  .tabbar-inner {
-    max-width: 480px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(4, 1fr);
-  }
-  .tab {
-    display: flex; flex-direction: column; align-items: center; gap: 2px;
-    padding: 6px 0; color: var(--ink-soft);
-    font-size: 10px; letter-spacing: 0.5px;
-  }
-  .tab .ico { font-size: 22px; line-height: 1; }
+  .tabbar-inner { display: flex; }
+  .tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 0; color: var(--ink-soft); font-size: 11px; letter-spacing: 1px; }
+  .tab .ico { font-size: 20px; }
   .tab.active { color: var(--cinnabar); }
-  .tab.active .ico { transform: scale(1.1); }
+  .tab:active { background: var(--ink-line); }
 
-  /* ===== Toast ===== */
-  .toast {
-    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
-    background: var(--ink); color: var(--paper);
-    padding: 10px 20px; border-radius: 100px;
-    font-size: 13px; font-weight: 500;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    opacity: 0; pointer-events: none;
-    transition: all .25s; z-index: 200;
-  }
+  .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--paper); padding: 10px 18px; font-size: 13px; letter-spacing: 1px; opacity: 0; transition: all .3s; z-index: 200; pointer-events: none; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  /* ===== Install Banner ===== */
-  .install-banner {
-    background: var(--ink); color: var(--paper);
-    border-radius: 12px; padding: 12px 16px;
-    margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
-    box-shadow: var(--shadow);
+  .empty {
+    text-align: center; padding: 60px 20px; color: var(--ink-soft);
   }
-  .install-banner .body { flex: 1; }
-  .install-banner .ttl { font-size: 13px; font-weight: 700; }
-  .install-banner .desc { font-size: 11px; opacity: 0.8; margin-top: 2px; }
-  .install-banner button {
-    background: var(--xhs-yellow); color: var(--ink);
-    font-size: 12px; font-weight: 700;
-    padding: 6px 12px; border-radius: 100px;
-  }
-
-  @media (min-width: 481px) {
-    .app { box-shadow: 0 0 40px rgba(0,0,0,0.08); }
-  }
+  .empty .ico { font-size: 48px; margin-bottom: 12px; }
+  .empty p { font-size: 14px; line-height: 1.7; }
+  .empty strong { color: var(--cinnabar); }
 </style>
 </head>
 <body>
-
 <div class="app">
-
-  <!-- Top Bar -->
-  <header class="topbar">
+  <div class="topbar">
     <div class="brand">
       <span class="brand-mark">🥭</span>
-      <span class="brand-name">芒果出行</span>
+      <span class="brand-name">芒 果 出 行</span>
     </div>
     <div class="topbar-actions">
-      <button class="icon-btn" id="btn-share" title="分享">↗</button>
-      <button class="icon-btn" id="btn-install" title="添加到主屏幕" style="display:none;">+</button>
+      <button class="icon-btn" id="btn-install" style="display:none">+</button>
+      <button class="icon-btn" id="btn-share">↗</button>
     </div>
-  </header>
+  </div>
 
-  <!-- ============ PAGE: HOME (Day by Day) ============ -->
+  <!-- ============ PAGE: 行程 (HOME) ============ -->
   <main class="page active" id="page-home">
-
-    <section class="hero">
-      <span class="badge">📍 宁波 · ZHEJIANG</span>
-      <h1>鲜在嘴里，<br>潮在<span class="accent">身上</span>。</h1>
-      <div class="sub">A coastal ode to seafood, smoke & shutter.</div>
-      <div class="hero-tags">
-        <span class="hero-tag">🦞 海鲜</span>
-        <span class="hero-tag">📸 出片</span>
-        <span class="hero-tag">🍵 老字号</span>
-        <span class="hero-tag">🏛 万国博物馆</span>
-      </div>
-    </section>
-
-    <div class="stats">
-      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">DAYS</div></div>
-      <div class="stat-item"><div class="stat-num">¥1.5k</div><div class="stat-label">PER P</div></div>
-      <div class="stat-item"><div class="stat-num">20+</div><div class="stat-label">SPOTS</div></div>
-      <div class="stat-item"><div class="stat-num" id="stat-checked">0</div><div class="stat-label">CHECK</div></div>
+    <div id="home-content">
+      <!-- 由 JS 渲染 -->
     </div>
-
-    <!-- Day 1 -->
-    <section class="day-section">
-      <div class="day-head">
-        <div class="day-num">01</div>
-        <div class="day-title">
-          <h2>老城根下，吃一碗千年汤圆</h2>
-          <div class="vibe">海曙老城区 · 慢节奏 · 经典甬味</div>
-        </div>
-      </div>
-
-      <article class="slot" data-id="d1-s1">
-        <div class="slot-head">
-          <span class="slot-time">10:00</span>
-          <span class="slot-tag food">EAT · 必吃榜</span>
-        </div>
-        <div class="slot-name">缸鸭狗 · 南郊路老店</div>
-        <div class="slot-sub">GANG YA GOU · 始于 1926</div>
-        <div class="slot-desc">宁波汤圆国家级非遗代表。猪油黑洋酥咬开流心。<strong>避雷天一广场店</strong>，去南郊路 271 号老店，本地人多、便宜 1/3。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">💰 ¥30 · 30min</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('缸鸭狗')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="slot" data-id="d1-s2">
-        <div class="slot-head">
-          <span class="slot-time">11:30</span>
-          <span class="slot-tag shoot">SHOOT · 必拍</span>
-        </div>
-        <div class="slot-name">鼓 楼 + 步行街</div>
-        <div class="slot-sub">DRUM TOWER · 明代 1370</div>
-        <div class="slot-desc">宁波地标，城楼上可俯瞰老城。旁边<strong>永丰库遗址</strong>免费看，宋元商贸中心遗存。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">📸 1h · 免费</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('宁波鼓楼')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="slot" data-id="d1-s3">
-        <div class="slot-head">
-          <span class="slot-time">12:30</span>
-          <span class="slot-tag food">EAT · 必吃榜</span>
-        </div>
-        <div class="slot-name">阿 拉 名 灶</div>
-        <div class="slot-sub">A LA MING ZAO · 人均 65</div>
-        <div class="slot-desc">宁波菜馆热门榜第 1。糖醋小黄鱼、年糕烧黄鱼、酱烧年糕必点。<strong>中午去不排队</strong>。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">💰 ¥65 · 1h</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('阿拉名灶')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="slot" data-id="d1-s4">
-        <div class="slot-head">
-          <span class="slot-time">14:30</span>
-          <span class="slot-tag shoot">SHOOT · 必拍</span>
-        </div>
-        <div class="slot-name">天 一 阁 博 物 院</div>
-        <div class="slot-sub">TIAN YI GE · 明 1561</div>
-        <div class="slot-desc">中国现存最古老的私家藏书楼。范氏"天一"取自《易经》"天一生水，地六成之"。<strong>雨天更好拍</strong>。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">📸 2h · ¥30</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('天一阁博物馆')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="slot" data-id="d1-s5">
-        <div class="slot-head">
-          <span class="slot-time">19:00</span>
-          <span class="slot-tag food">EAT · 必吃榜</span>
-        </div>
-        <div class="slot-name">美 宴 摩 登 宁 波 菜</div>
-        <div class="slot-sub">MEI YAN · 人均 100</div>
-        <div class="slot-desc">宁波菜新派代表。<strong>雪菜黄鱼</strong>用的是野生大黄鱼，年糕软糯挂汁。<strong>建议预约</strong>。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">💰 ¥100 · 1.5h</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('美宴摩登宁波菜')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <div class="bomb">
-        ⚠️ <strong>踩雷提醒：</strong>缸鸭狗天一广场店专宰游客，黑洋酥汤圆 ¥28 一碗 6 个，老店同款 ¥18。去<strong>南郊路 271 号</strong>老店。
-      </div>
-    </section>
-
-    <!-- Day 2 -->
-    <section class="day-section">
-      <div class="day-head">
-        <div class="day-num">02</div>
-        <div class="day-title">
-          <h2>三江口夜景，从老外滩到美术馆</h2>
-          <div class="vibe">江北外滩 · 万国建筑 · 文艺出片</div>
-        </div>
-      </div>
-
-      <article class="slot" data-id="d2-s1">
-        <div class="slot-head">
-          <span class="slot-time">10:00</span>
-          <span class="slot-tag food">EAT · 必吃榜</span>
-        </div>
-        <div class="slot-name">宁 波 老 饭 店</div>
-        <div class="slot-sub">NINGBO LAO FANDIAN · 1987</div>
-        <div class="slot-desc">本地老牌宁波菜。<strong>冰糖甲鱼</strong>是镇店菜，还有苔菜拖黄鱼、宁波汤圆。<strong>午市套餐更划算</strong>。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">💰 ¥90 · 1h</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('宁波老饭店')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="slot" data-id="d2-s2">
-        <div class="slot-head">
-          <span class="slot-time">11:30</span>
-          <span class="slot-tag shoot">SHOOT · 必拍</span>
-        </div>
-        <div class="slot-name">老 外 滩 · 100+ 百年建筑</div>
-        <div class="slot-sub">OLD BUND · 比上海外滩早 20 年</div>
-        <div class="slot-desc">五口通商旧址，<strong>天主教堂 + 海关旧址 + 浙东学派藏书楼</strong>。<strong>雨天拍更出片</strong>，地面反光建筑轮廓。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">📸 2h · 免费</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('宁波老外滩')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="slot" data-id="d2-s3">
-        <div class="slot-head">
-          <span class="slot-time">14:00</span>
-          <span class="slot-tag shoot">SHOOT · 必拍</span>
-        </div>
-        <div class="slot-name">宁 波 美 术 馆</div>
-        <div class="slot-sub">NINGBO MUSEUM OF ART · 普利兹克奖</div>
-        <div class="slot-desc"><strong>王澍设计</strong>，瓦爿墙立面超有辨识度。常年免费展览，江景落地窗。<strong>文艺青年必去</strong>。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">📸 1.5h · 免费</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('宁波美术馆')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="slot" data-id="d2-s4">
-        <div class="slot-head">
-          <span class="slot-time">18:00</span>
-          <span class="slot-tag food">EAT · 黑珍珠</span>
-        </div>
-        <div class="slot-name">明 阁 · 朗 豪 酒 店</div>
-        <div class="slot-sub">MING GE · 黑珍珠一钻</div>
-        <div class="slot-desc">宁波唯一<strong>黑珍珠一钻粤菜</strong>。脆皮乳鸽、蜜汁叉烧、龙虾汤泡饭。<strong>景观位提前 3 天订</strong>。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">💰 ¥400 · 2h</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('朗豪酒店明阁')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="slot" data-id="d2-s5">
-        <div class="slot-head">
-          <span class="slot-time">21:00</span>
-          <span class="slot-tag shoot">SHOOT · 必拍</span>
-        </div>
-        <div class="slot-name">三 江 口 夜 景</div>
-        <div class="slot-sub">THREE RIVERS JUNCTION</div>
-        <div class="slot-desc">甬江 + 姚江 + 奉化江三江汇合。<strong>江厦桥东侧</strong>拍倒影最佳，<strong>亮灯 18:30-22:00</strong>。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">📸 1h · 免费</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('三江口')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <div class="hidden">
-        📸 <strong>隐藏机位：</strong>宁波美术馆 4 楼平台，<strong>远眺三江口 + 老外滩</strong>全收，馆内咖啡厅下午人少景好。
-      </div>
-    </section>
-
-    <!-- Day 3 -->
-    <section class="day-section">
-      <div class="day-head">
-        <div class="day-num">03</div>
-        <div class="day-title">
-          <h2>东钱湖，把节奏调成 0.5x</h2>
-          <div class="vibe">殷湾渔火 · 湖光山色 · 治愈收尾</div>
-        </div>
-      </div>
-
-      <article class="slot" data-id="d3-s1">
-        <div class="slot-head">
-          <span class="slot-time">09:00</span>
-          <span class="slot-tag food">EAT · 小红书</span>
-        </div>
-        <div class="slot-name">味 一 早 餐 · 月 湖</div>
-        <div class="slot-sub">WEI YI · 月湖店</div>
-        <div class="slot-desc">本地早餐铺，<strong>油条 + 豆浆 + 麻糍</strong>，价格亲民，宁波人吃法。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">💰 ¥15 · 30min</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('味一早餐月湖店')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="slot" data-id="d3-s2">
-        <div class="slot-head">
-          <span class="slot-time">10:30</span>
-          <span class="slot-tag shoot">SHOOT · 必拍</span>
-        </div>
-        <div class="slot-name">东 钱 湖 骑 行</div>
-        <div class="slot-sub">DONQIAN LAKE · 杭州西湖 4 倍</div>
-        <div class="slot-desc">浙江省最大天然淡水湖。<strong>陶公岛 → 小普陀</strong>段最美，沿湖栈道 + 茶园。<strong>租自行车 ¥20/天</strong>。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">📸 3h · ¥20</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('东钱湖')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="slot" data-id="d3-s3">
-        <div class="slot-head">
-          <span class="slot-time">13:00</span>
-          <span class="slot-tag food">EAT · 必吃榜</span>
-        </div>
-        <div class="slot-name">钱 湖 渔 港 · 野 生 湖 鲜</div>
-        <div class="slot-sub">QIANHU YUGANG · 湖畔</div>
-        <div class="slot-desc">湖边大排档，<strong>东钱湖开胃虾</strong>+ 湖鲜拼盘。<strong>落地窗湖景位</strong>，吃的就是风景。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">💰 ¥150 · 1.5h</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('钱湖渔港')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="slot" data-id="d3-s4">
-        <div class="slot-head">
-          <span class="slot-time">15:00</span>
-          <span class="slot-tag treasure">SHOP · 伴手礼</span>
-        </div>
-        <div class="slot-name">东 钱 湖 麻 糍 + 年 糕</div>
-        <div class="slot-sub">LOCAL SOUVENIR · 真空包</div>
-        <div class="slot-desc">湖边有现做现卖的手工麻糍，<strong>真空包装可带</strong>。宁波水磨年糕也是必带，<strong>比超市口感好 10 倍</strong>。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">💰 ¥60 · 1h</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('东钱湖伴手礼')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="slot" data-id="d3-s5">
-        <div class="slot-head">
-          <span class="slot-time">17:00</span>
-          <span class="slot-tag stay">STAY · 民宿</span>
-        </div>
-        <div class="slot-name">庐 愿 · 藏 湖 民 宿</div>
-        <div class="slot-sub">LUYUAN · 殷湾渔火</div>
-        <div class="slot-desc">270° 全景落地窗，<strong>清晨看湖面日出、夜晚拍星空</strong>。设计师风格+院子咖啡角，出片率超高。</div>
-        <div class="slot-foot">
-          <span class="slot-meta">💰 ¥600-900 · 含早</span>
-          <div class="slot-actions">
-            <button class="slot-btn" onclick="navTo('庐愿藏湖民宿')">🗺️ 导航</button>
-            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
-          </div>
-        </div>
-      </article>
-    </section>
-
   </main>
 
-  <!-- ============ PAGE: STAY ============ -->
+  <!-- ============ PAGE: 住宿 (STAY) ============ -->
   <main class="page" id="page-stay">
-    <section class="hero">
-      <span class="badge">🏨 STAY · 3 NIGHTS</span>
-      <h1>住 哪 才 不 踩 雷</h1>
-      <div class="sub">华住会首选 · 2 年内新酒店优先</div>
-    </section>
-
-    <!-- 选房策略提示 -->
-    <div style="background:white; border-left:3px solid var(--cinnabar); border-radius:0 12px 12px 0; padding:14px 16px; margin-bottom:18px; box-shadow:var(--shadow-card);">
-      <div style="font-family:'Noto Serif SC',serif; font-weight:900; color:var(--cinnabar); font-size:13px; margin-bottom:6px;">🥭 芒果出行 · 选房策略</div>
-      <div style="font-size:12px; line-height:1.7;">
-        <strong>① 华住会会员价优先</strong> — 金卡 8.8 折 / 铂金 8.5 折<br>
-        <strong>② 2 年内新酒店优先</strong> — 智能客控 + 静音窗<br>
-        <strong>③ 灵活策略</strong> — 海曙连住 2 晚 + 第 3 晚湖边民宿
-      </div>
-    </div>
-
-    <div class="stay-card">
-      <div class="stay-banner night-1">
-        <div class="num">NIGHT 01 · 02 · 连住</div>
-        <h3>海 曙 老 城</h3>
-        <div class="area">OLD TOWN · 海曙区</div>
-      </div>
-      <div class="stay-body">
-        <div class="stay-name">🏨 全季酒店·宁波天一广场店</div>
-        <div class="stay-addr">📍 海曙区中山东路 · 距天一广场 300m <span class="tag">华住会 · 2023 装修</span></div>
-        <div class="stay-desc">华住会金卡/铂金卡会员价 8.5-8.8 折，亚朵级中端，<strong>智能客控 + 静音窗</strong>，步行 5 分钟到天一广场、鼓楼。</div>
-        <div class="stay-foot">
-          <span>💰 ¥280-380/晚（华住会价）</span>
-          <span>⭐ 4.7 · 2 年内新</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="stay-card">
-      <div class="stay-banner night-3">
-        <div class="num">NIGHT 03</div>
-        <h3>东 钱 湖 畔</h3>
-        <div class="area">LAKE SIDE · 鄞州区</div>
-      </div>
-      <div class="stay-body">
-        <div class="stay-name">🏡 庐愿·藏湖民宿</div>
-        <div class="stay-addr">📍 殷湾渔火景区内 · 270° 落地窗 <span class="tag jade">设计型民宿</span></div>
-        <div class="stay-desc">民宿是华住系覆盖外的合理例外。<strong>2024 开业</strong>，270° 全景落地窗，<strong>清晨看湖面日出、夜晚拍星空</strong>。</div>
-        <div class="stay-foot">
-          <span>💰 ¥600-900/晚（含早）</span>
-          <span>⭐ 4.8 · 2 年内新</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="stay-card">
-      <div class="stay-banner alt">
-        <div class="num">ALTERNATIVE</div>
-        <h3>华 住 系 备 选</h3>
-        <div class="area">HUAZHU GROUP</div>
-      </div>
-      <div class="stay-body">
-        <div class="stay-name">🏨 桔子水晶 / 宜必思 / 星程</div>
-        <div class="stay-addr">📍 海曙 / 江北 / 火车站 <span class="tag">华住会全覆盖</span></div>
-        <div class="stay-desc">
-          · <strong>桔子水晶·天一广场店</strong> 2024 新开<br>
-          · <strong>宜必思·宁波火车站店</strong> 2023 装修<br>
-          · <strong>星程·老外滩店</strong> 2024 开业
-        </div>
-        <div class="stay-foot">
-          <span>💰 ¥200-500/晚</span>
-          <span>⭐ 4.5-4.7</span>
-        </div>
-      </div>
-    </div>
+    <div id="stay-content"></div>
   </main>
 
-  <!-- ============ PAGE: ROUTE ============ -->
+  <!-- ============ PAGE: 路线 (ROUTE) ============ -->
   <main class="page" id="page-route">
-    <section class="hero">
-      <span class="badge" style="background:var(--jade);color:white;">DISTANCE & TIME</span>
-      <h1>点 与 点 之 间 的 距 离</h1>
-      <div class="sub">3-Day Route · 步行 / 打车 · 高德/百度数据</div>
-    </section>
-
-    <div class="route-day">
-      <h3>Day 01 · 海曙老城</h3>
-      <div class="sub">总计：步行 4.6 km + 打车 1 次 + ¥15</div>
-      <div class="route-flow">
-        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">缸鸭狗</div><div class="time">10:00 · 早餐</div></div></div>
-        <div class="route-line" data-label="1.1km · 15min 步行"></div>
-        <div class="route-node"><div class="route-dot shoot"></div><div class="route-info"><div class="name">鼓楼 + 步行街</div><div class="time">11:30 · 出片</div></div></div>
-        <div class="route-line" data-label="1.1km · 14min 步行"></div>
-        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">阿拉名灶</div><div class="time">12:30 · 必吃榜</div></div></div>
-        <div class="route-line" data-label="0.4km · 5min 步行"></div>
-        <div class="route-node"><div class="route-dot shoot"></div><div class="route-info"><div class="name">天一阁</div><div class="time">14:30 · 必拍</div></div></div>
-        <div class="route-line" data-label="2.0km · 打车 10min · ¥15"></div>
-        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">美宴摩登宁波菜</div><div class="time">19:00 · 必吃榜</div></div></div>
-      </div>
-    </div>
-
-    <div class="route-day">
-      <h3>Day 02 · 江北外滩</h3>
-      <div class="sub">总计：步行 1.8 km + 打车 2 次 + ¥36</div>
-      <div class="route-flow">
-        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">宁波老饭店</div><div class="time">10:00 · 必吃榜</div></div></div>
-        <div class="route-line" data-label="0.3km · 4min 步行"></div>
-        <div class="route-node"><div class="route-dot shoot"></div><div class="route-info"><div class="name">老外滩</div><div class="time">11:30 · 必拍</div></div></div>
-        <div class="route-line" data-label="1.5km · 20min 步行"></div>
-        <div class="route-node"><div class="route-dot shoot"></div><div class="route-info"><div class="name">美术馆 + 天主教堂</div><div class="time">14:00 · 必拍</div></div></div>
-        <div class="route-line" data-label="3.5km · 打车 12min · ¥22"></div>
-        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">明阁 · 黑珍珠</div><div class="time">18:00 · 黑珍珠</div></div></div>
-        <div class="route-line" data-label="2.0km · 打车 8min · ¥14"></div>
-        <div class="route-node"><div class="route-dot shoot"></div><div class="route-info"><div class="name">三江口夜景</div><div class="time">21:00 · 必拍</div></div></div>
-      </div>
-    </div>
-
-    <div class="route-day">
-      <h3>Day 03 · 东钱湖</h3>
-      <div class="sub">总计：打车 3 次 + 骑行 10km + ¥95</div>
-      <div class="route-flow">
-        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">味一早餐</div><div class="time">09:00 · 月湖</div></div></div>
-        <div class="route-line" data-label="15km · 打车 35min · ¥55"></div>
-        <div class="route-node"><div class="route-dot shoot"></div><div class="route-info"><div class="name">东钱湖骑行</div><div class="time">10:30 · 必拍</div></div></div>
-        <div class="route-line" data-label="0.5km · 骑行 5min"></div>
-        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">钱湖渔港</div><div class="time">13:00 · 必吃榜</div></div></div>
-        <div class="route-line" data-label="3km · 打车 8min · ¥18"></div>
-        <div class="route-node"><div class="route-dot treasure"></div><div class="route-info"><div class="name">东钱湖伴手礼</div><div class="time">15:00 · 麻糍 + 年糕</div></div></div>
-        <div class="route-line" data-label="5km · 打车 12min · ¥22"></div>
-        <div class="route-node"><div class="route-dot stay"></div><div class="route-info"><div class="name">庐愿·藏湖民宿</div><div class="time">17:00 · 入住</div></div></div>
-      </div>
-    </div>
-
-    <div class="route-summary">
-      <strong>💰 3 日总交通预算：¥146</strong><br>
-      打车 6 次 + 公交/地铁 ¥0 备用<br>
-      数据来源：高德/百度地图实测
-    </div>
+    <div id="route-content"></div>
   </main>
 
-  <!-- ============ PAGE: ABOUT ============ -->
+  <!-- ============ PAGE: 关于 (ABOUT) ============ -->
   <main class="page" id="page-about">
     <section class="hero">
       <span class="badge">🥭 ABOUT</span>
       <h1>关 于 芒 果 出 行</h1>
-      <div class="sub">Mango · Travel · v1.0 PWA</div>
+      <div class="sub">Mango · Travel · v2.0 Generator</div>
     </section>
-
     <div class="about-card">
-      <h3>🥭 这份行程</h3>
-      <p>宁波 3 天美食 + 拍照行程单，结合大众点评必吃榜、黑珍珠、小红书私藏、华住会住宿策略 + 3 日距离时间路线图。<br><br>数据来源：大众点评 2025 必吃榜、黑珍珠 2025、小红书 5 万+ 篇笔记、华住会官方、宁波文旅。</p>
+      <h3>🥭 这是什么</h3>
+      <p>任意城市 × 任意天数 PWA 行程生成器。输入城市名 + 天数 + 出发日期，<strong>自动搜索高德 POI</strong>，智能拼接美食 + 景点 + 住宿 + 路线，生成专属你的旅行手册。</p>
     </div>
-
     <div class="about-card">
-      <h3>📱 如何使用</h3>
+      <h3>⚙️ 工作原理</h3>
       <ul>
-        <li><strong>点 ✓ 打卡</strong> — 标记已去/未去，自动保存到本地</li>
-        <li><strong>点 🗺️ 导航</strong> — 一键跳转高德地图导航</li>
-        <li><strong>添加到主屏幕</strong> — 像 App 一样使用，离线可用</li>
-        <li><strong>点击右上 ↗</strong> — 分享给同行旅伴</li>
+        <li><strong>POI 搜索</strong> — 高德地图 API 实时查景点/餐厅/酒店</li>
+        <li><strong>路径规划</strong> — 高德驾车 API 算距离 + 时间 + 费用</li>
+        <li><strong>数据缓存</strong> — localStorage 存 7 天，二次访问秒开</li>
+        <li><strong>离线可用</strong> — Service Worker 缓存所有资源</li>
       </ul>
     </div>
-
     <div class="about-card">
-      <h3>🍴 选店标准</h3>
+      <h3>📱 使用说明</h3>
       <ul>
-        <li><strong>必吃榜 ✓</strong> — 大众点评 2025 官方认证</li>
-        <li><strong>黑珍珠</strong> — 美团 2025 一钻/二钻</li>
-        <li><strong>小红书</strong> — 用户推荐 + 实地探店</li>
-        <li><strong>踩雷</strong> — 已标注，专避坑</li>
+        <li><strong>点 ✓ 打卡</strong> — 标记已去，自动存本地</li>
+        <li><strong>点 🗺️ 导航</strong> — 一键跳转高德地图</li>
+        <li><strong>切换城市</strong> — 顶部表单填新城市，点生成</li>
+        <li><strong>添加到主屏</strong> — 像 App 一样用，离线可用</li>
       </ul>
     </div>
-
     <div class="about-card" style="background:linear-gradient(135deg, var(--cinnabar), var(--cinnabar-light)); color:white;">
       <h3 style="color:white;">🥭 芒果出行</h3>
-      <p style="opacity:0.9;">让每一次出发，都有迹可循。<br><br>用一份好行程，开启一段好旅程。</p>
+      <p style="opacity:0.9;">让每一次出发，都有迹可循。<br>用一份好行程，开启一段好旅程。</p>
     </div>
   </main>
-
 </div>
 
-<!-- Tab Bar -->
 <nav class="tabbar">
   <div class="tabbar-inner">
     <button class="tab active" data-page="home"><span class="ico">📍</span><span>行程</span></button>
@@ -943,111 +324,643 @@
   </div>
 </nav>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-  // ============ Tab 切换 ============
-  document.querySelectorAll('.tab').forEach(t => {
-    t.addEventListener('click', () => {
-      const target = t.dataset.page;
-      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-      t.classList.add('active');
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + target).classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  });
+// ============================================================
+// CONFIG
+// ============================================================
+const AMAP_KEY = '42c8af90d382e5b4366dc21e15a3e53b';
+const CACHE_TTL = 7 * 24 * 3600 * 1000; // 7 天
 
-  // ============ 打卡 ============
-  const checked = JSON.parse(localStorage.getItem('mango-checked') || '[]');
+// 城市经纬度中心点（用于路径规划起点/终点回退）
+const CITY_CENTERS = {
+  '宁波': '121.544,29.868',
+  '杭州': '120.155,30.275',
+  '成都': '104.066,30.572',
+  '厦门': '118.110,24.490',
+  '西安': '108.940,34.341',
+  '苏州': '120.585,31.299',
+  '北京': '116.407,39.904',
+  '上海': '121.473,31.230',
+  '广州': '113.264,23.129',
+  '重庆': '106.551,29.563',
+  '南京': '118.796,32.060',
+  '武汉': '114.305,30.593',
+  '青岛': '120.382,36.067',
+  '长沙': '112.938,28.228',
+  '大理': '100.225,25.596',
+  '丽江': '100.230,26.872',
+  '拉萨': '91.132,29.660',
+  '三亚': '109.512,18.252',
+  '哈尔滨': '126.642,45.756',
+  '兰州': '103.834,36.061',
+  '敦煌': '94.661,40.142'
+};
 
-  function updateStat() {
-    document.getElementById('stat-checked').textContent = checked.length;
+// ============================================================
+// 离线数据（热门城市预置，保证首次打开快）
+// ============================================================
+const OFFLINE_DATA = {
+  '宁波': {
+    name: '宁波',
+    days: 3,
+    startDate: null,
+    dayPlans: [
+      { theme: '老城根下，吃一碗千年汤圆', vibe: '海曙老城区 · 慢节奏 · 经典甬味', slots: [
+        { time: '10:00', type: 'food', tag: 'EAT · 必吃榜', name: '缸鸭狗·南郊路老店', sub: 'GANG YA GOU · 始于 1926', desc: '宁波汤圆国家级非遗代表。猪油黑洋酥咬开流心。<strong>避雷天一广场店</strong>，去南郊路 271 号老店，本地人多、便宜 1/3。', meta: '💰 ¥30 · 30min', location: '缸鸭狗' },
+        { time: '11:30', type: 'shoot', tag: 'SHOOT · 必拍', name: '鼓 楼 + 步行街', sub: 'DRUM TOWER · 明代 1370', desc: '宁波地标，城楼上可俯瞰老城。旁边<strong>永丰库遗址</strong>免费看，宋元商贸中心遗存。', meta: '📸 1h · 免费', location: '宁波鼓楼' },
+        { time: '12:30', type: 'food', tag: 'EAT · 必吃榜', name: '阿 拉 名 灶', sub: 'A LA MING ZAO · 人均 65', desc: '宁波菜馆热门榜第 1。糖醋小黄鱼、年糕烧黄鱼、酱烧年糕必点。<strong>中午去不排队</strong>。', meta: '💰 ¥65 · 1h', location: '阿拉名灶' },
+        { time: '14:30', type: 'shoot', tag: 'SHOOT · 必拍', name: '天 一 阁 博 物 院', sub: 'TIAN YI GE · 明 1561', desc: '中国现存最古老的私家藏书楼。范氏"天一"取自《易经》"天一生水，地六成之"。<strong>雨天更好拍</strong>。', meta: '📸 2h · ¥30', location: '天一阁博物馆' },
+        { time: '19:00', type: 'food', tag: 'EAT · 必吃榜', name: '美 宴 摩 登 宁 波 菜', sub: 'MEI YAN · 人均 100', desc: '宁波菜新派代表。<strong>雪菜黄鱼</strong>用的是野生大黄鱼，年糕软糯挂汁。<strong>建议预约</strong>。', meta: '💰 ¥100 · 1.5h', location: '美宴摩登宁波菜' }
+      ], bomb: '<strong>踩雷提醒：</strong>缸鸭狗天一广场店专宰游客，黑洋酥汤圆 ¥28 一碗 6 个，老店同款 ¥18。去<strong>南郊路 271 号</strong>老店。' },
+      { theme: '三江口夜景，从老外滩到美术馆', vibe: '江北外滩 · 万国建筑 · 文艺出片', slots: [
+        { time: '10:00', type: 'food', tag: 'EAT · 必吃榜', name: '宁 波 老 饭 店', sub: 'NINGBO LAO FANDIAN · 1987', desc: '本地老牌宁波菜。<strong>冰糖甲鱼</strong>是镇店菜，还有苔菜拖黄鱼、宁波汤圆。<strong>午市套餐更划算</strong>。', meta: '💰 ¥90 · 1h', location: '宁波老饭店' },
+        { time: '11:30', type: 'shoot', tag: 'SHOOT · 必拍', name: '老 外 滩 · 100+ 百年建筑', sub: 'OLD BUND · 比上海外滩早 20 年', desc: '五口通商旧址，<strong>天主教堂 + 海关旧址 + 浙东学派藏书楼</strong>。<strong>雨天拍更出片</strong>，地面反光建筑轮廓。', meta: '📸 2h · 免费', location: '宁波老外滩' },
+        { time: '14:00', type: 'shoot', tag: 'SHOOT · 必拍', name: '宁 波 美 术 馆', sub: 'NINGBO MUSEUM OF ART · 普利兹克奖', desc: '<strong>王澍设计</strong>，瓦爿墙立面超有辨识度。常年免费展览，江景落地窗。<strong>文艺青年必去</strong>。', meta: '📸 1.5h · 免费', location: '宁波美术馆' },
+        { time: '16:00', type: 'food', tag: 'EAT · 小红书', name: '宁 波 汤 圆 店 · 巷子里', sub: '小红书私藏 · 人均 25', desc: '本地人吃的小店，<strong>鲜肉汤圆</strong>比黑洋酥更鲜，下午 2 点后才有。<strong>老板娘现包现煮</strong>。', meta: '💰 ¥25 · 30min', location: '宁波汤圆' },
+        { time: '19:30', type: 'shoot', tag: 'SHOOT · 必拍', name: '三 江 口 夜 景', sub: 'Sanjiangkou Night View', desc: '甬江 + 姚江 + 奉化江三江汇流，<strong>对岸是舟山</strong>。拍摄机位：外滩天主教堂前台阶、美术馆江景平台。', meta: '📸 1.5h · 免费', location: '三江口' }
+      ], bomb: '<strong>小红书踩雷：</strong>老外滩"民国风情街"很多店是义乌小商品，专坑游客。走远一点去<strong>江边路 100-200 号</strong>老街坊菜。' },
+      { theme: '东钱湖，藏着宁波的山水秘境', vibe: '鄞州区 · 山水氧吧 · 治愈系', slots: [
+        { time: '09:00', type: 'shoot', tag: 'SHOOT · 必拍', name: '东 钱 湖 · 陶 公 岛', sub: 'DONGSHAN LAKE · 杭州西湖 4 倍大', desc: '宁波"后花园"，<strong>殷湾渔火 + 小普陀 + 湖东</strong>三大景区。<strong>骑电瓶车环湖</strong>，全程 45km 半天。', meta: '📸 3h · 免费', location: '东钱湖' },
+        { time: '13:00', type: 'food', tag: 'EAT · 必吃榜', name: '钱 湖 渔 港', sub: 'QIANHU YUGANG · 人均 150', desc: '东钱湖湖鲜必吃榜。<strong>钱湖之吻（鱼头）+ 盐水河虾</strong>。<strong>湖景包间需提前 1 周订</strong>。', meta: '💰 ¥150 · 1.5h', location: '钱湖渔港' },
+        { time: '15:00', type: 'shoot', tag: 'SHOOT · 隐藏机位', name: '小 普 陀 · 湖 心 亭', sub: 'XIAOPUTUO · 隐藏拍照点', desc: '东钱湖湖心岛，<strong>枯水季湖中石阶露出</strong>，小红书神图机位。<strong>无人机视角更震撼</strong>。', meta: '📸 1.5h · 免费', location: '小普陀' },
+        { time: '17:00', type: 'stay', tag: 'STAY · 民宿', name: '庐 愿 · 藏 湖 民 宿', sub: 'LUYUAN LAKEHOUSE · 2024 开业', desc: '殷湾渔火景区内，<strong>270° 落地窗</strong>，清晨看湖面日出、夜晚拍星空。<strong>设计师风格 + 院子咖啡角</strong>。', meta: '🏨 ¥600-900/晚', location: '庐愿藏湖' }
+      ] }
+    ],
+    stays: [
+      { num: '01', color: 'var(--cinnabar)', title: '海 曙 老 城', sub: 'OLD TOWN · 海曙区', name: '全季酒店·宁波天一广场店', addr: '📍 海曙区中山东路 · 距天一广场 300m · 华住会 · 2023 装修', desc: '华住会金卡 / 铂金卡会员价 8.5-8.8 折，亚朵级中端价位，2023 重新装修，<strong>智能客控 + 静音窗</strong>，步行 5 分钟到天一广场、鼓楼。', price: '💰 ¥280-380/晚（华住会价）' },
+      { num: '02', color: 'var(--jade)', title: '东 钱 湖 畔', sub: 'LAKE SIDE · 鄞州区', name: '庐 愿 · 藏 湖 民 宿', addr: '📍 殷湾渔火景区内 · 270° 落地窗 · 设计型民宿', desc: '殷湾渔火景区内，<strong>2024 开业</strong>，270° 全景落地窗，<strong>清晨看湖面日出、夜晚拍星空</strong>，设计师风格 + 院子咖啡角，出片率超高。', price: '💰 ¥600-900/晚（含早）' },
+      { num: '03', color: '#1a3a5c', title: '华 住 系 备 选', sub: 'HUAZHU GROUP', name: '桔子水晶 / 宜必思 / 星程', addr: '📍 海曙 / 江北 / 火车站 · 华住会全覆盖', desc: '· <strong>桔子水晶·天一广场店</strong> 2024 新开，国际设计<br>· <strong>宜必思·宁波火车站店</strong> 2023 装修<br>· <strong>星程·老外滩店</strong> 2024 开业，江景房性价比高', price: '💰 ¥200-500/晚' }
+    ]
   }
-  updateStat();
+};
 
-  document.querySelectorAll('.slot').forEach(slot => {
-    const id = slot.dataset.id;
-    if (checked.includes(id)) slot.classList.add('checked');
-  });
+// ============================================================
+// 当前行程数据
+// ============================================================
+let CURRENT = null;
 
-  function checkSlot(btn) {
-    const slot = btn.closest('.slot');
-    const id = slot.dataset.id;
-    const idx = checked.indexOf(id);
-    if (idx >= 0) {
-      checked.splice(idx, 1);
-      slot.classList.remove('checked');
-      toast('已取消打卡');
-    } else {
-      checked.push(id);
-      slot.classList.add('checked');
-      toast('✓ 已打卡 · 进度 ' + checked.length + '/15');
+// ============================================================
+// 高德 API
+// ============================================================
+async function amapSearch(keywords, city, type='') {
+  const params = new URLSearchParams({ key: AMAP_KEY, keywords, city, extensions: 'base', offset: 8 });
+  if (type) params.set('types', type);
+  const r = await fetch(`https://restapi.amap.com/v3/place/text?${params}`);
+  const d = await r.json();
+  if (d.status === '1' && d.pois) return d.pois.map(p => ({
+    name: p.name, address: p.address, location: p.location,
+    type: p.type, tel: p.tel || ''
+  }));
+  return [];
+}
+
+async function amapAround(center, radius=3000, type='') {
+  const params = new URLSearchParams({ key: AMAP_KEY, location: center, radius, offset: 10, extensions: 'base' });
+  if (type) params.set('types', type);
+  const r = await fetch(`https://restapi.amap.com/v3/place/around?${params}`);
+  const d = await r.json();
+  if (d.status === '1' && d.pois) return d.pois.map(p => ({
+    name: p.name, address: p.address, location: p.location, type: p.type
+  }));
+  return [];
+}
+
+async function amapRoute(origin, destination) {
+  const params = new URLSearchParams({ key: AMAP_KEY, origin, destination, extensions: 'base' });
+  const r = await fetch(`https://restapi.amap.com/v3/direction/driving?${params}`);
+  const d = await r.json();
+  if (d.status === '1' && d.route?.paths?.[0]) {
+    const p = d.route.paths[0];
+    return { distance: parseInt(p.distance), duration: parseInt(p.duration), cost: Math.round(parseFloat(p.tolls || 0) + (parseInt(p.distance)/1000) * 2.5) };
+  }
+  return null;
+}
+
+// ============================================================
+// 生成器逻辑
+// ============================================================
+function cacheKey(city, days) { return `mango-trip-${city}-${days}d`; }
+
+function loadFromCache(city, days) {
+  try {
+    const raw = localStorage.getItem(cacheKey(city, days));
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (Date.now() - data._ts > CACHE_TTL) return null;
+    return data;
+  } catch { return null; }
+}
+
+function saveToCache(city, days, data) {
+  try {
+    data._ts = Date.now();
+    localStorage.setItem(cacheKey(city, days), JSON.stringify(data));
+  } catch {}
+}
+
+async function generatePlan(city, days, startDate) {
+  setStatus('🔍 搜索 ' + city + ' 必游景点...');
+  const attractions = await amapSearch(city + ' 景点', city) || await amapSearch(city + ' 旅游', city);
+  await sleep(200);
+  setStatus('🍜 搜索 ' + city + ' 必吃餐厅...');
+  const foods = await amapSearch(city + ' 美食', city, '餐饮') || await amapSearch(city + ' 餐厅', city);
+  await sleep(200);
+  setStatus('🏨 搜索 ' + city + ' 酒店...');
+  const hotels = await amapSearch(city + ' 酒店', city, '住宿服务') || await amapSearch(city + ' 住宿', city);
+  await sleep(200);
+  setStatus('🎨 智能编排 ' + days + ' 天行程...');
+
+  if (attractions.length < 2 || foods.length < 2) {
+    throw new Error(city + ' 数据不足，请尝试其他城市');
+  }
+
+  // 把 POI 分配到每一天
+  const slotsPerDay = Math.max(3, Math.min(6, Math.round(15 / days)));
+  const dayPlans = [];
+  for (let d = 0; d < days; d++) {
+    const dayStart = d * slotsPerDay;
+    const slots = [];
+    for (let i = 0; i < slotsPerDay && (dayStart + i) < (attractions.length + foods.length); i++) {
+      const isFood = (i === 1 || i === 4) && foods.length > 0;
+      const poi = isFood ? foods.shift() : attractions.shift();
+      if (!poi) break;
+      const hour = 8 + i * 2;
+      slots.push({
+        time: String(Math.min(hour, 21)).padStart(2, '0') + ':00',
+        type: isFood ? 'food' : 'shoot',
+        tag: isFood ? 'EAT · 必吃' : 'SHOOT · 必拍',
+        name: poi.name,
+        sub: (poi.address || city).slice(0, 30),
+        desc: '<strong>' + poi.name + '</strong>位于 ' + (poi.adname || city) + (poi.address ? '，' + poi.address : '') + '。' + (isFood ? '本地热门餐厅，建议提前预约。' : '热门景点，建议预留 1-2 小时。'),
+        meta: (isFood ? '💰 人均 ¥80 · 1.5h' : '📸 1-2h · ¥30-80'),
+        location: poi.name
+      });
     }
-    localStorage.setItem('mango-checked', JSON.stringify(checked));
-    updateStat();
+    dayPlans.push({
+      theme: '第 ' + (d + 1) + ' 天 · ' + city + ' 漫游',
+      vibe: slots.length > 0 ? slots[0].name + ' 出发 → ' + slots[slots.length - 1].name : city,
+      slots,
+      bomb: ''
+    });
   }
 
-  // ============ 导航 ============
-  function navTo(name) {
-    const url = `https://uri.amap.com/search?keyword=${encodeURIComponent(name)}&src=mango`;
-    window.open(url, '_blank');
-    toast('🗺️ 打开高德地图');
+  // 住宿：前 N-1 晚主城酒店 + 最后 1 晚郊区
+  const stays = [];
+  const stayNights = Math.max(1, days - 1);
+  if (hotels.length > 0) {
+    const midHotel = hotels[Math.floor(hotels.length / 2)] || hotels[0];
+    stays.push({
+      num: '01', color: 'var(--cinnabar)', title: city + ' 主城',
+      sub: 'CITY CENTER',
+      name: midHotel.name,
+      addr: '📍 ' + (midHotel.address || city),
+      desc: '主城区酒店，<strong>步行/打车 10 分钟</strong>内可达大部分景点。' + (midHotel.tel ? '电话：' + midHotel.tel : ''),
+      price: '💰 ¥300-500/晚'
+    });
+    if (stayNights > 2 && hotels.length > 2) {
+      const alt = hotels[hotels.length - 1];
+      stays.push({
+        num: '02', color: 'var(--jade)', title: city + ' 备选',
+        sub: 'ALTERNATIVE',
+        name: alt.name,
+        addr: '📍 ' + (alt.address || city),
+        desc: '另一商圈酒店，<strong>适合连住切换区域</strong>体验不同氛围。',
+        price: '💰 ¥250-450/晚'
+      });
+    }
   }
 
-  // ============ Toast ============
-  let toastTimer;
-  function toast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
-  }
+  return {
+    name: city, days, startDate,
+    dayPlans, stays,
+    cityCenter: CITY_CENTERS[city] || ''
+  };
+}
 
-  // ============ 分享 ============
-  document.getElementById('btn-share').addEventListener('click', async () => {
-    const shareData = {
-      title: '芒果出行 · 宁波三日游',
-      text: '宁波 3 天美食+拍照行程单 · 必吃榜 + 黑珍珠 + 华住会住宿',
-      url: location.href
-    };
-    if (navigator.share) {
-      try { await navigator.share(shareData); } catch(e) {}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function setStatus(msg, isError) {
+  const el = document.getElementById('gen-status');
+  el.className = 'gen-status show' + (isError ? ' error' : '');
+  el.innerHTML = msg;
+}
+
+async function doGenerate() {
+  const city = document.getElementById('gen-city').value.trim();
+  const days = parseInt(document.getElementById('gen-days').value) || 3;
+  const startDate = document.getElementById('gen-date').value || null;
+
+  if (!city) { setStatus('⚠️ 请输入城市名', true); return; }
+  if (days < 1 || days > 30) { setStatus('⚠️ 天数应在 1-30 之间', true); return; }
+
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true; btn.textContent = '生成中...';
+
+  try {
+    // 1) 优先用离线数据
+    let data = OFFLINE_DATA[city];
+    if (data) {
+      setStatus('⚡ 使用预置数据：' + city + '（秒开）');
+      await sleep(300);
+      if (days !== data.days) {
+        // 调整天数
+        if (days > data.days) {
+          for (let i = data.days; i < days; i++) {
+            data.dayPlans.push({
+              theme: '第 ' + (i + 1) + ' 天 · ' + city + ' 探索',
+              vibe: '延伸行程 · 可选日',
+              slots: [{ time: '10:00', type: 'shoot', tag: 'SHOOT · 推荐', name: city + ' 第 ' + (i + 1) + ' 天探索', sub: 'EXPLORE MORE', desc: '预置数据只覆盖 ' + data.days + ' 天，第 ' + (i + 1) + ' 天可考虑<strong>城市周边游</strong>。', meta: '📸 全天', location: city }],
+              bomb: ''
+            });
+          }
+        } else {
+          data.dayPlans = data.dayPlans.slice(0, days);
+        }
+        data.days = days;
+      }
+      data.startDate = startDate;
     } else {
-      try {
-        await navigator.clipboard.writeText(location.href);
-        toast('🔗 链接已复制');
-      } catch(e) {
-        toast('复制失败，请手动分享');
+      // 2) 联网搜索
+      setStatus('🔍 联网搜索 ' + city + ' 数据...');
+      data = await generatePlan(city, days, startDate);
+    }
+
+    saveToCache(city, days, data);
+    CURRENT = data;
+    renderAll();
+    setStatus('✅ 已生成 ' + city + ' ' + days + ' 天行程');
+    setTimeout(() => switchPage('home'), 500);
+  } catch (e) {
+    setStatus('❌ ' + e.message, true);
+  } finally {
+    btn.disabled = false; btn.textContent = '🥭 生成我的行程';
+  }
+}
+
+// ============================================================
+// 渲染
+// ============================================================
+function pad2(n) { return String(n).padStart(2, '0'); }
+
+function dateOffset(startDate, dayOffset) {
+  if (!startDate) return 'Day ' + pad2(dayOffset);
+  const d = new Date(startDate);
+  d.setDate(d.getDate() + dayOffset);
+  return (d.getMonth() + 1) + '月' + d.getDate() + '日';
+}
+
+function renderHome() {
+  const c = document.getElementById('home-content');
+  if (!CURRENT) {
+    c.innerHTML = `
+      <div class="hero">
+        <span class="badge">🥭 GENERATOR v2.0</span>
+        <h1>任意城市 ·<br>任意天数</h1>
+        <div class="sub">Mango · Travel</div>
+      </div>
+      <div class="gen-panel">
+        <div class="gen-row">
+          <div class="gen-field">
+            <label class="gen-label">🏙️ 城市</label>
+            <input class="gen-input" id="gen-city" placeholder="如：宁波 / 杭州 / 成都" value="">
+          </div>
+        </div>
+        <div class="gen-row">
+          <div class="gen-field">
+            <label class="gen-label">🔢 天数</label>
+            <div class="gen-stepper">
+              <button onclick="stepDays(-1)">−</button>
+              <input class="gen-input" id="gen-days" value="3" type="number" min="1" max="30">
+              <button onclick="stepDays(1)">+</button>
+            </div>
+          </div>
+          <div class="gen-field">
+            <label class="gen-label">📅 出发</label>
+            <input class="gen-input" id="gen-date" type="date" value="${new Date().toISOString().slice(0,10)}">
+          </div>
+        </div>
+        <button class="gen-btn" id="gen-btn" onclick="doGenerate()">🥭 生成我的行程</button>
+        <div class="gen-status" id="gen-status"></div>
+        <div class="gen-tip">
+          ⚡ <strong>宁波</strong>有预置数据可秒开；其他城市自动调用高德地图 POI 搜索（首次 5-10 秒，之后缓存 7 天）。
+        </div>
+      </div>
+      <div class="empty">
+        <div class="ico">🥭</div>
+        <p><strong>输入城市和天数</strong>，<br>开始你的下一段旅程。</p>
+      </div>
+    `;
+    return;
+  }
+
+  const totalSlots = CURRENT.dayPlans.reduce((s, d) => s + d.slots.length, 0);
+  let html = `
+    <div class="hero">
+      <span class="badge">📍 ${CURRENT.days} DAYS</span>
+      <h1>${CURRENT.name} ${CURRENT.days}日游</h1>
+      <div class="sub">${CURRENT.startDate ? dateOffset(CURRENT.startDate, 0) + ' → ' + dateOffset(CURRENT.startDate, CURRENT.days - 1) : CURRENT.days + ' 天漫游行'}</div>
+    </div>
+    <div class="gen-panel" style="padding: 14px; box-shadow: 3px 3px 0 var(--ink); margin-bottom: 20px;">
+      <div style="font-size: 11px; color: var(--cinnabar); font-weight: 700; letter-spacing: 2px; margin-bottom: 6px;">🔄 重新规划</div>
+      <div class="gen-row">
+        <div class="gen-field">
+          <input class="gen-input" id="gen-city2" value="${CURRENT.name}">
+        </div>
+        <div class="gen-field" style="max-width: 80px;">
+          <input class="gen-input" id="gen-days2" value="${CURRENT.days}" type="number" min="1" max="30">
+        </div>
+      </div>
+      <button class="gen-btn" style="margin-top: 8px; padding: 10px;" onclick="regen()">重新生成</button>
+    </div>
+    <div class="stat-bar">
+      <div class="stat-item"><div class="stat-num">${CURRENT.days}</div><div class="stat-label">DAYS</div></div>
+      <div class="stat-item"><div class="stat-num">${totalSlots}+</div><div class="stat-label">SPOTS</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-checked">${getCheckedCount()}</div><div class="stat-label">CHECK</div></div>
+    </div>
+  `;
+
+  CURRENT.dayPlans.forEach((day, idx) => {
+    html += `
+      <section class="day-section">
+        <div class="day-head">
+          <div class="day-num">${pad2(idx + 1)}</div>
+          <div class="day-title">
+            <h2>${day.theme}</h2>
+            <div class="vibe">${day.vibe}</div>
+            <div class="day-date">${dateOffset(CURRENT.startDate, idx)}</div>
+          </div>
+        </div>
+        ${day.slots.map(s => renderSlot(s, 'd' + (idx + 1) + '-' + s.name)).join('')}
+        ${day.bomb ? '<div class="bomb">⚠️ ' + day.bomb + '</div>' : ''}
+      </section>
+    `;
+  });
+
+  c.innerHTML = html;
+}
+
+function renderSlot(s, id) {
+  return `
+    <article class="slot" data-id="${id}">
+      <div class="slot-head">
+        <span class="slot-time">${s.time}</span>
+        <span class="slot-tag ${s.type}">${s.tag}</span>
+      </div>
+      <div class="slot-name">${s.name}</div>
+      <div class="slot-sub">${s.sub}</div>
+      <div class="slot-desc">${s.desc}</div>
+      <div class="slot-foot">
+        <span class="slot-meta">${s.meta}</span>
+        <div class="slot-actions">
+          <button class="slot-btn" onclick="navTo('${s.location}')">🗺️</button>
+          <button class="slot-btn primary" onclick="checkSlot(this)">✓</button>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderStay() {
+  const c = document.getElementById('stay-content');
+  if (!CURRENT || !CURRENT.stays || CURRENT.stays.length === 0) {
+    c.innerHTML = '<div class="empty"><div class="ico">🏨</div><p>暂无住宿数据</p></div>';
+    return;
+  }
+  let html = `
+    <div class="hero">
+      <span class="badge">🏨 STAY</span>
+      <h1>住 哪 才 不 踩 雷</h1>
+      <div class="sub">${CURRENT.days - 1} NIGHTS · ${CURRENT.name}</div>
+    </div>
+  `;
+  CURRENT.stays.forEach(s => {
+    html += `
+      <div class="stay-card">
+        <div class="stay-head" style="background: ${s.color};">
+          <div class="num">${s.num}</div>
+          <div>
+            <div class="info">${s.title}</div>
+            <div class="sub">${s.sub}</div>
+          </div>
+        </div>
+        <div class="stay-body">
+          <h4>${s.name}</h4>
+          <div class="addr">${s.addr}</div>
+          <div class="desc">${s.desc}</div>
+          <div class="price">${s.price} <button class="slot-btn" onclick="navTo('${s.name}')">🗺️ 导航</button></div>
+        </div>
+      </div>
+    `;
+  });
+  c.innerHTML = html;
+}
+
+async function renderRoute() {
+  const c = document.getElementById('route-content');
+  if (!CURRENT) {
+    c.innerHTML = '<div class="empty"><div class="ico">🗺️</div><p>请先生成行程</p></div>';
+    return;
+  }
+
+  let html = `
+    <div class="hero">
+      <span class="badge">🗺️ ROUTE</span>
+      <h1>距离 · 时间 · 路线</h1>
+      <div class="sub">${CURRENT.days} Days · 高德实时路径</div>
+    </div>
+  `;
+
+  let totalCost = 0;
+  for (let i = 0; i < CURRENT.dayPlans.length; i++) {
+    const day = CURRENT.dayPlans[i];
+    html += `
+      <div class="route-day">
+        <div class="route-day-head">
+          <div class="num">${pad2(i + 1)}</div>
+          <h3>Day ${i + 1} · ${day.slots[0]?.name || ''} → ${day.slots[day.slots.length-1]?.name || ''}</h3>
+        </div>
+        <div class="route-flow">
+    `;
+    for (let j = 0; j < day.slots.length; j++) {
+      const s = day.slots[j];
+      const dotClass = s.type === 'food' ? '' : (s.type === 'shoot' ? 'shoot' : (s.type === 'stay' ? 'stay' : ''));
+      html += `
+        <div class="route-node">
+          <div class="route-dot ${dotClass}"></div>
+          <div class="route-info">
+            <div class="name">${s.name}</div>
+            <div class="time">${s.time} · ${s.tag}</div>
+          </div>
+        </div>
+      `;
+      if (j < day.slots.length - 1) {
+        const next = day.slots[j + 1];
+        // 尝试高德实时路径
+        let label = '⏳ 计算中...';
+        try {
+          // 没有 location 坐标就跳过
+          if (s._location && next._location) {
+            const r = await amapRoute(s._location, next._location);
+            if (r) {
+              label = (r.distance/1000).toFixed(1) + 'km · ' + Math.round(r.duration/60) + 'min · ¥' + r.cost;
+              totalCost += r.cost;
+            } else {
+              label = '🚗 短途衔接';
+            }
+          } else {
+            label = '🚗 城內衔接';
+          }
+        } catch { label = '🚗 衔接'; }
+        html += `<div class="route-line" data-label="${label}"></div>`;
       }
     }
-  });
+    html += `</div></div>`;
+  }
 
-  // ============ PWA Install ============
-  let deferredPrompt;
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById('btn-install').style.display = 'flex';
-  });
-  document.getElementById('btn-install').addEventListener('click', async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') toast('✓ 已添加到主屏幕');
-      deferredPrompt = null;
+  html += `<div class="route-summary"><strong>💰 总交通预算：¥${totalCost || '—'}</strong><br>基于高德地图驾车 API 实时计算</div>`;
+  c.innerHTML = html;
+}
+
+function renderAll() {
+  renderHome();
+  renderStay();
+  renderRoute();
+}
+
+// ============================================================
+// 交互
+// ============================================================
+function stepDays(d) {
+  const el = document.getElementById('gen-days');
+  el.value = Math.max(1, Math.min(30, (parseInt(el.value) || 3) + d));
+}
+
+function regen() {
+  const city = document.getElementById('gen-city2').value.trim();
+  const days = parseInt(document.getElementById('gen-days2').value) || 3;
+  document.getElementById('gen-city').value = city;
+  document.getElementById('gen-days').value = days;
+  doGenerate();
+}
+
+function navTo(name) {
+  if (!name) { toast('⚠️ 暂无位置'); return; }
+  const url = `https://uri.amap.com/search?keyword=${encodeURIComponent(name)}&src=mango`;
+  window.open(url, '_blank');
+  toast('🗺️ 打开高德地图');
+}
+
+function checkSlot(btn) {
+  const slot = btn.closest('.slot');
+  const id = slot.dataset.id;
+  let checked = JSON.parse(localStorage.getItem('mango-checked') || '[]');
+  if (checked.includes(id)) {
+    checked = checked.filter(x => x !== id);
+    slot.classList.remove('checked');
+    btn.classList.remove('checked');
+    btn.textContent = '✓';
+  } else {
+    checked.push(id);
+    slot.classList.add('checked');
+    btn.classList.add('checked');
+    btn.textContent = '✓✓';
+  }
+  localStorage.setItem('mango-checked', JSON.stringify(checked));
+  document.getElementById('stat-checked').textContent = getCheckedCount();
+}
+
+function getCheckedCount() {
+  return JSON.parse(localStorage.getItem('mango-checked') || '[]').length;
+}
+
+function restoreChecked() {
+  const checked = JSON.parse(localStorage.getItem('mango-checked') || '[]');
+  checked.forEach(id => {
+    const el = document.querySelector(`.slot[data-id="${id}"]`);
+    if (el) {
+      el.classList.add('checked');
+      const btn = el.querySelector('.slot-btn.primary');
+      if (btn) { btn.classList.add('checked'); btn.textContent = '✓✓'; }
     }
   });
+}
 
-  // ============ Service Worker ============
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
-    });
+function switchPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.tab[data-page="${name}"]`).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// ============ Init ============
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => switchPage(t.dataset.page)));
+
+document.getElementById('btn-share').addEventListener('click', async () => {
+  const data = {
+    title: '🥭 芒果出行',
+    text: CURRENT ? `${CURRENT.name} ${CURRENT.days}日游` : '我的旅行行程',
+    url: location.href
+  };
+  if (navigator.share) { try { await navigator.share(data); } catch(e) {} }
+  else { try { await navigator.clipboard.writeText(location.href); toast('🔗 链接已复制'); } catch(e) {} }
+});
+
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault(); deferredPrompt = e;
+  document.getElementById('btn-install').style.display = 'flex';
+});
+document.getElementById('btn-install').addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') toast('✓ 已添加到主屏');
+    deferredPrompt = null;
   }
-</script>
+});
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+
+// 启动：检查 localStorage 默认值
+window.addEventListener('DOMContentLoaded', () => {
+  restoreChecked();
+  // 自动加载上次缓存
+  const lastCity = localStorage.getItem('mango-last-city');
+  if (lastCity) {
+    const data = loadFromCache(lastCity.city, lastCity.days);
+    if (data) { CURRENT = data; renderAll(); }
+  }
+});
+
+// 监听 home/stay/route 切换时刷新
+['home', 'stay', 'route'].forEach(p => {
+  document.querySelector(`.tab[data-page="${p}"]`).addEventListener('click', () => {
+    if (p === 'route') renderRoute();
+  });
+});
+
+// 保存当前城市
+const _origGenerate = doGenerate;
+doGenerate = async function() {
+  await _origGenerate();
+  const city = document.getElementById('gen-city').value.trim();
+  const days = parseInt(document.getElementById('gen-days').value) || 3;
+  localStorage.setItem('mango-last-city', JSON.stringify({ city, days }));
+};
+</script>
 </body>
 </html>
