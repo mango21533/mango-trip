@@ -942,8 +942,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const lastCity = localStorage.getItem('mango-last-city');
   if (lastCity) {
     const data = loadFromCache(lastCity.city, lastCity.days);
-    if (data) { CURRENT = data; renderAll(); }
+    if (data) { CURRENT = data; }
   }
+  // 无论有没有缓存，都先渲染首页（让用户看到配置面板）
+  renderAll();
 });
 
 // 监听 home/stay/route 切换时刷新

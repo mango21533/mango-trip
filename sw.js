@@ -1,5 +1,5 @@
 // 芒果出行 PWA · Service Worker
-const CACHE = 'mango-trip-v2';
+const CACHE = 'mango-trip-v3';
 const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', (e) => {
