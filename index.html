@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#c8412a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="芒果出行">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='48' fill='%23ff2442'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='central' text-anchor='middle' font-size='140'%3E%F0%9F%8D%8D%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='48' fill='%23ff2442'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='central' text-anchor='middle' font-size='140'%3E%F0%9F%8D%8D%3C/text%3E%3C/svg%3E">
+<title>芒果出行 · 宁波三日游</title>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+  :root {
+    --ink: #1a1814;
+    --paper: #f4ede0;
+    --paper-2: #ebe1cf;
+    --cinnabar: #c8412a;
+    --cinnabar-light: #e87060;
+    --gold: #b8924c;
+    --jade: #4a7a5e;
+    --jade-light: #6ba382;
+    --xhs-red: #ff2442;
+    --xhs-yellow: #ffc94d;
+    --ink-soft: rgba(26, 24, 20, 0.55);
+    --ink-line: rgba(26, 24, 20, 0.12);
+    --shadow: 0 4px 18px rgba(26, 24, 20, 0.08);
+    --shadow-card: 0 2px 10px rgba(26, 24, 20, 0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse at top left, rgba(200, 65, 42, 0.05) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(74, 122, 94, 0.05) 0%, transparent 60%);
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ===== App Shell ===== */
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding-bottom: 80px;
+    position: relative;
+    background: var(--paper);
+  }
+
+  /* ===== Top Bar ===== */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(244, 237, 224, 0.92);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--ink-line);
+  }
+  .brand {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .brand-mark { font-size: 24px; line-height: 1; }
+  .brand-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 17px; font-weight: 900; letter-spacing: 2px;
+    color: var(--cinnabar);
+  }
+  .topbar-actions { display: flex; gap: 8px; }
+  .icon-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(26, 24, 20, 0.05);
+    color: var(--ink); display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .icon-btn:active { background: var(--ink); color: var(--paper); }
+
+  /* ===== Pages ===== */
+  .page { display: none; padding: 0 20px 20px; animation: fadeIn .3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ===== Hero ===== */
+  .hero {
+    padding: 28px 0 24px;
+    text-align: left;
+    position: relative;
+  }
+  .hero .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; letter-spacing: 2px; font-weight: 700;
+    background: var(--ink); color: var(--xhs-yellow);
+    padding: 5px 12px; border-radius: 100px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 38px; font-weight: 900; line-height: 1.05; letter-spacing: -1px;
+    color: var(--ink);
+  }
+  .hero h1 .accent { color: var(--cinnabar); font-style: italic; }
+  .hero .sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 18px;
+    color: var(--ink-soft); margin-top: 10px;
+  }
+  .hero-tags {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px;
+  }
+  .hero-tag {
+    font-size: 12px; padding: 5px 12px;
+    background: white; border: 1px solid var(--ink-line);
+    border-radius: 100px;
+  }
+
+  /* ===== Stats Strip ===== */
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    background: white; border-radius: 18px; padding: 16px 0;
+    box-shadow: var(--shadow); margin-bottom: 24px;
+  }
+  .stat-item { text-align: center; border-right: 1px solid var(--ink-line); }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--cinnabar); }
+  .stat-label { font-size: 10px; letter-spacing: 1.5px; color: var(--ink-soft); margin-top: 2px; text-transform: uppercase; }
+
+  /* ===== Day Section ===== */
+  .day-section { margin-bottom: 32px; }
+  .day-head {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+  }
+  .day-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 600; line-height: 1;
+    color: var(--cinnabar); font-style: italic;
+  }
+  .day-title { flex: 1; }
+  .day-title h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 19px; font-weight: 900; line-height: 1.2;
+  }
+  .day-title .vibe {
+    font-size: 11px; color: var(--ink-soft); margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== Slot Card ===== */
+  .slot {
+    background: white; border-radius: 16px; padding: 14px 16px;
+    margin-bottom: 12px; box-shadow: var(--shadow-card);
+    position: relative; transition: all .2s;
+  }
+  .slot.checked { background: rgba(74, 122, 94, 0.06); }
+  .slot.checked .slot-name { text-decoration: line-through; opacity: 0.5; }
+  .slot-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    margin-bottom: 8px;
+  }
+  .slot-time {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 600; color: var(--cinnabar);
+    font-style: italic;
+  }
+  .slot-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+    padding: 3px 8px; border-radius: 4px;
+  }
+  .slot-tag.food { background: var(--cinnabar); color: white; }
+  .slot-tag.shoot { background: var(--jade); color: white; }
+  .slot-tag.treasure { background: var(--xhs-red); color: white; }
+  .slot-tag.stay { background: var(--ink); color: var(--xhs-yellow); }
+  .slot-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px; font-weight: 900; line-height: 1.3;
+  }
+  .slot-sub { font-size: 11px; color: var(--ink-soft); margin-top: 3px; }
+  .slot-desc { font-size: 13px; line-height: 1.6; margin-top: 8px; color: var(--ink); }
+  .slot-foot {
+    display: flex; align-items: center; justify-content: space-between; margin-top: 10px;
+    padding-top: 10px; border-top: 1px dashed var(--ink-line);
+  }
+  .slot-meta { font-size: 11px; color: var(--ink-soft); }
+  .slot-actions { display: flex; gap: 6px; }
+  .slot-btn {
+    font-size: 11px; font-weight: 700; padding: 5px 10px;
+    border-radius: 100px; background: var(--paper-2); color: var(--ink);
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .slot-btn:active { background: var(--ink); color: var(--paper); }
+  .slot-btn.primary { background: var(--cinnabar); color: white; }
+  .slot-btn.primary:active { background: var(--ink); }
+
+  /* ===== Bomb Alert (踩雷) ===== */
+  .bomb {
+    background: #fff5f3; border-left: 3px solid var(--cinnabar);
+    padding: 10px 14px; border-radius: 0 12px 12px 0; margin: 12px 0;
+    font-size: 12px; line-height: 1.5;
+  }
+  .bomb strong { color: var(--cinnabar); }
+
+  /* ===== Hidden Spot ===== */
+  .hidden {
+    background: linear-gradient(135deg, #fff8e6, #fff3cc);
+    border-radius: 12px; padding: 12px 14px; margin: 10px 0;
+    font-size: 12px; line-height: 1.5;
+  }
+  .hidden strong { color: var(--gold); }
+
+  /* ===== Section Title ===== */
+  .section-title {
+    display: flex; align-items: center; gap: 10px; margin: 32px 0 16px;
+  }
+  .section-title .badge {
+    background: var(--xhs-red); color: white; font-size: 11px;
+    font-weight: 700; letter-spacing: 2px; padding: 4px 10px; border-radius: 4px;
+  }
+  .section-title .badge.jade { background: var(--jade); }
+  .section-title .badge.ink { background: var(--ink); color: var(--xhs-yellow); }
+  .section-title h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 22px; font-weight: 900;
+  }
+
+  /* ===== Stay Card ===== */
+  .stay-card {
+    background: white; border-radius: 16px; overflow: hidden;
+    box-shadow: var(--shadow); margin-bottom: 14px;
+  }
+  .stay-banner {
+    padding: 16px 18px; color: white; position: relative;
+  }
+  .stay-banner.night-1 { background: linear-gradient(135deg, var(--cinnabar), var(--cinnabar-light)); }
+  .stay-banner.night-3 { background: linear-gradient(135deg, var(--jade), var(--jade-light)); }
+  .stay-banner.alt { background: linear-gradient(135deg, #1a3a5c, #2c5a8c); }
+  .stay-banner .num { font-size: 10px; letter-spacing: 2px; opacity: 0.9; }
+  .stay-banner h3 {
+    font-family: 'Noto Serif SC', serif; font-size: 20px; font-weight: 900;
+    margin-top: 4px;
+  }
+  .stay-banner .area { font-size: 11px; opacity: 0.9; margin-top: 2px; }
+  .stay-body { padding: 14px 18px; }
+  .stay-name {
+    font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 900;
+    margin-bottom: 4px;
+  }
+  .stay-addr { font-size: 11px; color: var(--ink-soft); margin-bottom: 10px; }
+  .stay-addr .tag {
+    display: inline-block; background: var(--cinnabar); color: white;
+    font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 6px;
+  }
+  .stay-addr .tag.jade { background: var(--jade); }
+  .stay-desc { font-size: 13px; line-height: 1.55; margin-bottom: 10px; }
+  .stay-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 10px; border-top: 1px dashed var(--ink-line);
+    font-size: 11px; color: var(--ink-soft);
+  }
+
+  /* ===== Route Section ===== */
+  .route-day {
+    background: white; border-radius: 16px; padding: 18px; margin-bottom: 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .route-day h3 {
+    font-family: 'Noto Serif SC', serif; font-size: 17px; font-weight: 900;
+    margin-bottom: 4px;
+  }
+  .route-day .sub { font-size: 11px; color: var(--ink-soft); margin-bottom: 16px; }
+  .route-flow { position: relative; }
+  .route-node {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 8px 0;
+  }
+  .route-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--cinnabar); flex-shrink: 0; margin-top: 4px;
+    border: 3px solid var(--paper-2);
+  }
+  .route-dot.shoot { background: var(--jade); }
+  .route-dot.treasure { background: var(--xhs-red); }
+  .route-dot.stay { background: var(--ink); }
+  .route-info { flex: 1; }
+  .route-info .name { font-family: 'Noto Serif SC', serif; font-size: 14px; font-weight: 700; }
+  .route-info .time { font-size: 11px; color: var(--ink-soft); }
+  .route-line {
+    margin-left: 6px; width: 2px; height: 24px; background: var(--ink-line);
+    position: relative;
+  }
+  .route-line::after {
+    content: attr(data-label);
+    position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+    font-size: 11px; color: var(--cinnabar); font-weight: 700;
+    background: var(--paper-2); padding: 2px 8px; border-radius: 100px;
+    white-space: nowrap;
+  }
+  .route-summary {
+    background: var(--paper-2); border-radius: 10px; padding: 10px 14px;
+    font-size: 12px; line-height: 1.6; margin-top: 12px;
+  }
+
+  /* ===== Favorites Page ===== */
+  .empty {
+    text-align: center; padding: 60px 20px;
+    color: var(--ink-soft);
+  }
+  .empty .icon { font-size: 48px; margin-bottom: 12px; }
+  .empty p { font-size: 13px; line-height: 1.6; }
+  .fav-item {
+    background: white; border-radius: 12px; padding: 12px 14px;
+    margin-bottom: 10px; box-shadow: var(--shadow-card);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .fav-item .emoji { font-size: 24px; }
+  .fav-item .body { flex: 1; }
+  .fav-item .name { font-family: 'Noto Serif SC', serif; font-size: 14px; font-weight: 700; }
+  .fav-item .day { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+  .fav-item .remove {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(200, 65, 42, 0.1); color: var(--cinnabar);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  /* ===== Map Page ===== */
+  .map-link {
+    display: block; background: white; border-radius: 14px;
+    padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow-card);
+    text-decoration: none; color: var(--ink);
+  }
+  .map-link:active { background: var(--paper-2); }
+  .map-link .name {
+    font-family: 'Noto Serif SC', serif; font-size: 15px; font-weight: 700;
+  }
+  .map-link .addr { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+  .map-link .arrow { float: right; color: var(--cinnabar); font-weight: 700; }
+
+  /* ===== About Page ===== */
+  .about-card {
+    background: white; border-radius: 16px; padding: 20px;
+    box-shadow: var(--shadow); margin-bottom: 14px;
+  }
+  .about-card h3 {
+    font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 900;
+    margin-bottom: 10px; color: var(--cinnabar);
+  }
+  .about-card p, .about-card li {
+    font-size: 13px; line-height: 1.7; color: var(--ink);
+  }
+  .about-card ul { padding-left: 18px; }
+
+  /* ===== Bottom Tab Bar ===== */
+  .tabbar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(244, 237, 224, 0.95);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid var(--ink-line);
+    padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+    z-index: 100;
+  }
+  .tabbar-inner {
+    max-width: 480px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+  }
+  .tab {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 6px 0; color: var(--ink-soft);
+    font-size: 10px; letter-spacing: 0.5px;
+  }
+  .tab .ico { font-size: 22px; line-height: 1; }
+  .tab.active { color: var(--cinnabar); }
+  .tab.active .ico { transform: scale(1.1); }
+
+  /* ===== Toast ===== */
+  .toast {
+    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--paper);
+    padding: 10px 20px; border-radius: 100px;
+    font-size: 13px; font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    opacity: 0; pointer-events: none;
+    transition: all .25s; z-index: 200;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ===== Install Banner ===== */
+  .install-banner {
+    background: var(--ink); color: var(--paper);
+    border-radius: 12px; padding: 12px 16px;
+    margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+    box-shadow: var(--shadow);
+  }
+  .install-banner .body { flex: 1; }
+  .install-banner .ttl { font-size: 13px; font-weight: 700; }
+  .install-banner .desc { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+  .install-banner button {
+    background: var(--xhs-yellow); color: var(--ink);
+    font-size: 12px; font-weight: 700;
+    padding: 6px 12px; border-radius: 100px;
+  }
+
+  @media (min-width: 481px) {
+    .app { box-shadow: 0 0 40px rgba(0,0,0,0.08); }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🥭</span>
+      <span class="brand-name">芒果出行</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="btn-share" title="分享">↗</button>
+      <button class="icon-btn" id="btn-install" title="添加到主屏幕" style="display:none;">+</button>
+    </div>
+  </header>
+
+  <!-- ============ PAGE: HOME (Day by Day) ============ -->
+  <main class="page active" id="page-home">
+
+    <section class="hero">
+      <span class="badge">📍 宁波 · ZHEJIANG</span>
+      <h1>鲜在嘴里，<br>潮在<span class="accent">身上</span>。</h1>
+      <div class="sub">A coastal ode to seafood, smoke & shutter.</div>
+      <div class="hero-tags">
+        <span class="hero-tag">🦞 海鲜</span>
+        <span class="hero-tag">📸 出片</span>
+        <span class="hero-tag">🍵 老字号</span>
+        <span class="hero-tag">🏛 万国博物馆</span>
+      </div>
+    </section>
+
+    <div class="stats">
+      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">DAYS</div></div>
+      <div class="stat-item"><div class="stat-num">¥1.5k</div><div class="stat-label">PER P</div></div>
+      <div class="stat-item"><div class="stat-num">20+</div><div class="stat-label">SPOTS</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-checked">0</div><div class="stat-label">CHECK</div></div>
+    </div>
+
+    <!-- Day 1 -->
+    <section class="day-section">
+      <div class="day-head">
+        <div class="day-num">01</div>
+        <div class="day-title">
+          <h2>老城根下，吃一碗千年汤圆</h2>
+          <div class="vibe">海曙老城区 · 慢节奏 · 经典甬味</div>
+        </div>
+      </div>
+
+      <article class="slot" data-id="d1-s1">
+        <div class="slot-head">
+          <span class="slot-time">10:00</span>
+          <span class="slot-tag food">EAT · 必吃榜</span>
+        </div>
+        <div class="slot-name">缸鸭狗 · 南郊路老店</div>
+        <div class="slot-sub">GANG YA GOU · 始于 1926</div>
+        <div class="slot-desc">宁波汤圆国家级非遗代表。猪油黑洋酥咬开流心。<strong>避雷天一广场店</strong>，去南郊路 271 号老店，本地人多、便宜 1/3。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">💰 ¥30 · 30min</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('缸鸭狗')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slot" data-id="d1-s2">
+        <div class="slot-head">
+          <span class="slot-time">11:30</span>
+          <span class="slot-tag shoot">SHOOT · 必拍</span>
+        </div>
+        <div class="slot-name">鼓 楼 + 步行街</div>
+        <div class="slot-sub">DRUM TOWER · 明代 1370</div>
+        <div class="slot-desc">宁波地标，城楼上可俯瞰老城。旁边<strong>永丰库遗址</strong>免费看，宋元商贸中心遗存。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">📸 1h · 免费</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('宁波鼓楼')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slot" data-id="d1-s3">
+        <div class="slot-head">
+          <span class="slot-time">12:30</span>
+          <span class="slot-tag food">EAT · 必吃榜</span>
+        </div>
+        <div class="slot-name">阿 拉 名 灶</div>
+        <div class="slot-sub">A LA MING ZAO · 人均 65</div>
+        <div class="slot-desc">宁波菜馆热门榜第 1。糖醋小黄鱼、年糕烧黄鱼、酱烧年糕必点。<strong>中午去不排队</strong>。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">💰 ¥65 · 1h</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('阿拉名灶')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slot" data-id="d1-s4">
+        <div class="slot-head">
+          <span class="slot-time">14:30</span>
+          <span class="slot-tag shoot">SHOOT · 必拍</span>
+        </div>
+        <div class="slot-name">天 一 阁 博 物 院</div>
+        <div class="slot-sub">TIAN YI GE · 明 1561</div>
+        <div class="slot-desc">中国现存最古老的私家藏书楼。范氏"天一"取自《易经》"天一生水，地六成之"。<strong>雨天更好拍</strong>。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">📸 2h · ¥30</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('天一阁博物馆')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slot" data-id="d1-s5">
+        <div class="slot-head">
+          <span class="slot-time">19:00</span>
+          <span class="slot-tag food">EAT · 必吃榜</span>
+        </div>
+        <div class="slot-name">美 宴 摩 登 宁 波 菜</div>
+        <div class="slot-sub">MEI YAN · 人均 100</div>
+        <div class="slot-desc">宁波菜新派代表。<strong>雪菜黄鱼</strong>用的是野生大黄鱼，年糕软糯挂汁。<strong>建议预约</strong>。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">💰 ¥100 · 1.5h</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('美宴摩登宁波菜')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <div class="bomb">
+        ⚠️ <strong>踩雷提醒：</strong>缸鸭狗天一广场店专宰游客，黑洋酥汤圆 ¥28 一碗 6 个，老店同款 ¥18。去<strong>南郊路 271 号</strong>老店。
+      </div>
+    </section>
+
+    <!-- Day 2 -->
+    <section class="day-section">
+      <div class="day-head">
+        <div class="day-num">02</div>
+        <div class="day-title">
+          <h2>三江口夜景，从老外滩到美术馆</h2>
+          <div class="vibe">江北外滩 · 万国建筑 · 文艺出片</div>
+        </div>
+      </div>
+
+      <article class="slot" data-id="d2-s1">
+        <div class="slot-head">
+          <span class="slot-time">10:00</span>
+          <span class="slot-tag food">EAT · 必吃榜</span>
+        </div>
+        <div class="slot-name">宁 波 老 饭 店</div>
+        <div class="slot-sub">NINGBO LAO FANDIAN · 1987</div>
+        <div class="slot-desc">本地老牌宁波菜。<strong>冰糖甲鱼</strong>是镇店菜，还有苔菜拖黄鱼、宁波汤圆。<strong>午市套餐更划算</strong>。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">💰 ¥90 · 1h</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('宁波老饭店')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slot" data-id="d2-s2">
+        <div class="slot-head">
+          <span class="slot-time">11:30</span>
+          <span class="slot-tag shoot">SHOOT · 必拍</span>
+        </div>
+        <div class="slot-name">老 外 滩 · 100+ 百年建筑</div>
+        <div class="slot-sub">OLD BUND · 比上海外滩早 20 年</div>
+        <div class="slot-desc">五口通商旧址，<strong>天主教堂 + 海关旧址 + 浙东学派藏书楼</strong>。<strong>雨天拍更出片</strong>，地面反光建筑轮廓。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">📸 2h · 免费</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('宁波老外滩')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slot" data-id="d2-s3">
+        <div class="slot-head">
+          <span class="slot-time">14:00</span>
+          <span class="slot-tag shoot">SHOOT · 必拍</span>
+        </div>
+        <div class="slot-name">宁 波 美 术 馆</div>
+        <div class="slot-sub">NINGBO MUSEUM OF ART · 普利兹克奖</div>
+        <div class="slot-desc"><strong>王澍设计</strong>，瓦爿墙立面超有辨识度。常年免费展览，江景落地窗。<strong>文艺青年必去</strong>。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">📸 1.5h · 免费</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('宁波美术馆')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slot" data-id="d2-s4">
+        <div class="slot-head">
+          <span class="slot-time">18:00</span>
+          <span class="slot-tag food">EAT · 黑珍珠</span>
+        </div>
+        <div class="slot-name">明 阁 · 朗 豪 酒 店</div>
+        <div class="slot-sub">MING GE · 黑珍珠一钻</div>
+        <div class="slot-desc">宁波唯一<strong>黑珍珠一钻粤菜</strong>。脆皮乳鸽、蜜汁叉烧、龙虾汤泡饭。<strong>景观位提前 3 天订</strong>。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">💰 ¥400 · 2h</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('朗豪酒店明阁')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slot" data-id="d2-s5">
+        <div class="slot-head">
+          <span class="slot-time">21:00</span>
+          <span class="slot-tag shoot">SHOOT · 必拍</span>
+        </div>
+        <div class="slot-name">三 江 口 夜 景</div>
+        <div class="slot-sub">THREE RIVERS JUNCTION</div>
+        <div class="slot-desc">甬江 + 姚江 + 奉化江三江汇合。<strong>江厦桥东侧</strong>拍倒影最佳，<strong>亮灯 18:30-22:00</strong>。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">📸 1h · 免费</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('三江口')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <div class="hidden">
+        📸 <strong>隐藏机位：</strong>宁波美术馆 4 楼平台，<strong>远眺三江口 + 老外滩</strong>全收，馆内咖啡厅下午人少景好。
+      </div>
+    </section>
+
+    <!-- Day 3 -->
+    <section class="day-section">
+      <div class="day-head">
+        <div class="day-num">03</div>
+        <div class="day-title">
+          <h2>东钱湖，把节奏调成 0.5x</h2>
+          <div class="vibe">殷湾渔火 · 湖光山色 · 治愈收尾</div>
+        </div>
+      </div>
+
+      <article class="slot" data-id="d3-s1">
+        <div class="slot-head">
+          <span class="slot-time">09:00</span>
+          <span class="slot-tag food">EAT · 小红书</span>
+        </div>
+        <div class="slot-name">味 一 早 餐 · 月 湖</div>
+        <div class="slot-sub">WEI YI · 月湖店</div>
+        <div class="slot-desc">本地早餐铺，<strong>油条 + 豆浆 + 麻糍</strong>，价格亲民，宁波人吃法。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">💰 ¥15 · 30min</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('味一早餐月湖店')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slot" data-id="d3-s2">
+        <div class="slot-head">
+          <span class="slot-time">10:30</span>
+          <span class="slot-tag shoot">SHOOT · 必拍</span>
+        </div>
+        <div class="slot-name">东 钱 湖 骑 行</div>
+        <div class="slot-sub">DONQIAN LAKE · 杭州西湖 4 倍</div>
+        <div class="slot-desc">浙江省最大天然淡水湖。<strong>陶公岛 → 小普陀</strong>段最美，沿湖栈道 + 茶园。<strong>租自行车 ¥20/天</strong>。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">📸 3h · ¥20</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('东钱湖')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slot" data-id="d3-s3">
+        <div class="slot-head">
+          <span class="slot-time">13:00</span>
+          <span class="slot-tag food">EAT · 必吃榜</span>
+        </div>
+        <div class="slot-name">钱 湖 渔 港 · 野 生 湖 鲜</div>
+        <div class="slot-sub">QIANHU YUGANG · 湖畔</div>
+        <div class="slot-desc">湖边大排档，<strong>东钱湖开胃虾</strong>+ 湖鲜拼盘。<strong>落地窗湖景位</strong>，吃的就是风景。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">💰 ¥150 · 1.5h</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('钱湖渔港')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slot" data-id="d3-s4">
+        <div class="slot-head">
+          <span class="slot-time">15:00</span>
+          <span class="slot-tag treasure">SHOP · 伴手礼</span>
+        </div>
+        <div class="slot-name">东 钱 湖 麻 糍 + 年 糕</div>
+        <div class="slot-sub">LOCAL SOUVENIR · 真空包</div>
+        <div class="slot-desc">湖边有现做现卖的手工麻糍，<strong>真空包装可带</strong>。宁波水磨年糕也是必带，<strong>比超市口感好 10 倍</strong>。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">💰 ¥60 · 1h</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('东钱湖伴手礼')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slot" data-id="d3-s5">
+        <div class="slot-head">
+          <span class="slot-time">17:00</span>
+          <span class="slot-tag stay">STAY · 民宿</span>
+        </div>
+        <div class="slot-name">庐 愿 · 藏 湖 民 宿</div>
+        <div class="slot-sub">LUYUAN · 殷湾渔火</div>
+        <div class="slot-desc">270° 全景落地窗，<strong>清晨看湖面日出、夜晚拍星空</strong>。设计师风格+院子咖啡角，出片率超高。</div>
+        <div class="slot-foot">
+          <span class="slot-meta">💰 ¥600-900 · 含早</span>
+          <div class="slot-actions">
+            <button class="slot-btn" onclick="navTo('庐愿藏湖民宿')">🗺️ 导航</button>
+            <button class="slot-btn primary" onclick="checkSlot(this)">✓ 打卡</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- ============ PAGE: STAY ============ -->
+  <main class="page" id="page-stay">
+    <section class="hero">
+      <span class="badge">🏨 STAY · 3 NIGHTS</span>
+      <h1>住 哪 才 不 踩 雷</h1>
+      <div class="sub">华住会首选 · 2 年内新酒店优先</div>
+    </section>
+
+    <!-- 选房策略提示 -->
+    <div style="background:white; border-left:3px solid var(--cinnabar); border-radius:0 12px 12px 0; padding:14px 16px; margin-bottom:18px; box-shadow:var(--shadow-card);">
+      <div style="font-family:'Noto Serif SC',serif; font-weight:900; color:var(--cinnabar); font-size:13px; margin-bottom:6px;">🥭 芒果出行 · 选房策略</div>
+      <div style="font-size:12px; line-height:1.7;">
+        <strong>① 华住会会员价优先</strong> — 金卡 8.8 折 / 铂金 8.5 折<br>
+        <strong>② 2 年内新酒店优先</strong> — 智能客控 + 静音窗<br>
+        <strong>③ 灵活策略</strong> — 海曙连住 2 晚 + 第 3 晚湖边民宿
+      </div>
+    </div>
+
+    <div class="stay-card">
+      <div class="stay-banner night-1">
+        <div class="num">NIGHT 01 · 02 · 连住</div>
+        <h3>海 曙 老 城</h3>
+        <div class="area">OLD TOWN · 海曙区</div>
+      </div>
+      <div class="stay-body">
+        <div class="stay-name">🏨 全季酒店·宁波天一广场店</div>
+        <div class="stay-addr">📍 海曙区中山东路 · 距天一广场 300m <span class="tag">华住会 · 2023 装修</span></div>
+        <div class="stay-desc">华住会金卡/铂金卡会员价 8.5-8.8 折，亚朵级中端，<strong>智能客控 + 静音窗</strong>，步行 5 分钟到天一广场、鼓楼。</div>
+        <div class="stay-foot">
+          <span>💰 ¥280-380/晚（华住会价）</span>
+          <span>⭐ 4.7 · 2 年内新</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stay-card">
+      <div class="stay-banner night-3">
+        <div class="num">NIGHT 03</div>
+        <h3>东 钱 湖 畔</h3>
+        <div class="area">LAKE SIDE · 鄞州区</div>
+      </div>
+      <div class="stay-body">
+        <div class="stay-name">🏡 庐愿·藏湖民宿</div>
+        <div class="stay-addr">📍 殷湾渔火景区内 · 270° 落地窗 <span class="tag jade">设计型民宿</span></div>
+        <div class="stay-desc">民宿是华住系覆盖外的合理例外。<strong>2024 开业</strong>，270° 全景落地窗，<strong>清晨看湖面日出、夜晚拍星空</strong>。</div>
+        <div class="stay-foot">
+          <span>💰 ¥600-900/晚（含早）</span>
+          <span>⭐ 4.8 · 2 年内新</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stay-card">
+      <div class="stay-banner alt">
+        <div class="num">ALTERNATIVE</div>
+        <h3>华 住 系 备 选</h3>
+        <div class="area">HUAZHU GROUP</div>
+      </div>
+      <div class="stay-body">
+        <div class="stay-name">🏨 桔子水晶 / 宜必思 / 星程</div>
+        <div class="stay-addr">📍 海曙 / 江北 / 火车站 <span class="tag">华住会全覆盖</span></div>
+        <div class="stay-desc">
+          · <strong>桔子水晶·天一广场店</strong> 2024 新开<br>
+          · <strong>宜必思·宁波火车站店</strong> 2023 装修<br>
+          · <strong>星程·老外滩店</strong> 2024 开业
+        </div>
+        <div class="stay-foot">
+          <span>💰 ¥200-500/晚</span>
+          <span>⭐ 4.5-4.7</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ PAGE: ROUTE ============ -->
+  <main class="page" id="page-route">
+    <section class="hero">
+      <span class="badge" style="background:var(--jade);color:white;">DISTANCE & TIME</span>
+      <h1>点 与 点 之 间 的 距 离</h1>
+      <div class="sub">3-Day Route · 步行 / 打车 · 高德/百度数据</div>
+    </section>
+
+    <div class="route-day">
+      <h3>Day 01 · 海曙老城</h3>
+      <div class="sub">总计：步行 4.6 km + 打车 1 次 + ¥15</div>
+      <div class="route-flow">
+        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">缸鸭狗</div><div class="time">10:00 · 早餐</div></div></div>
+        <div class="route-line" data-label="1.1km · 15min 步行"></div>
+        <div class="route-node"><div class="route-dot shoot"></div><div class="route-info"><div class="name">鼓楼 + 步行街</div><div class="time">11:30 · 出片</div></div></div>
+        <div class="route-line" data-label="1.1km · 14min 步行"></div>
+        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">阿拉名灶</div><div class="time">12:30 · 必吃榜</div></div></div>
+        <div class="route-line" data-label="0.4km · 5min 步行"></div>
+        <div class="route-node"><div class="route-dot shoot"></div><div class="route-info"><div class="name">天一阁</div><div class="time">14:30 · 必拍</div></div></div>
+        <div class="route-line" data-label="2.0km · 打车 10min · ¥15"></div>
+        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">美宴摩登宁波菜</div><div class="time">19:00 · 必吃榜</div></div></div>
+      </div>
+    </div>
+
+    <div class="route-day">
+      <h3>Day 02 · 江北外滩</h3>
+      <div class="sub">总计：步行 1.8 km + 打车 2 次 + ¥36</div>
+      <div class="route-flow">
+        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">宁波老饭店</div><div class="time">10:00 · 必吃榜</div></div></div>
+        <div class="route-line" data-label="0.3km · 4min 步行"></div>
+        <div class="route-node"><div class="route-dot shoot"></div><div class="route-info"><div class="name">老外滩</div><div class="time">11:30 · 必拍</div></div></div>
+        <div class="route-line" data-label="1.5km · 20min 步行"></div>
+        <div class="route-node"><div class="route-dot shoot"></div><div class="route-info"><div class="name">美术馆 + 天主教堂</div><div class="time">14:00 · 必拍</div></div></div>
+        <div class="route-line" data-label="3.5km · 打车 12min · ¥22"></div>
+        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">明阁 · 黑珍珠</div><div class="time">18:00 · 黑珍珠</div></div></div>
+        <div class="route-line" data-label="2.0km · 打车 8min · ¥14"></div>
+        <div class="route-node"><div class="route-dot shoot"></div><div class="route-info"><div class="name">三江口夜景</div><div class="time">21:00 · 必拍</div></div></div>
+      </div>
+    </div>
+
+    <div class="route-day">
+      <h3>Day 03 · 东钱湖</h3>
+      <div class="sub">总计：打车 3 次 + 骑行 10km + ¥95</div>
+      <div class="route-flow">
+        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">味一早餐</div><div class="time">09:00 · 月湖</div></div></div>
+        <div class="route-line" data-label="15km · 打车 35min · ¥55"></div>
+        <div class="route-node"><div class="route-dot shoot"></div><div class="route-info"><div class="name">东钱湖骑行</div><div class="time">10:30 · 必拍</div></div></div>
+        <div class="route-line" data-label="0.5km · 骑行 5min"></div>
+        <div class="route-node"><div class="route-dot"></div><div class="route-info"><div class="name">钱湖渔港</div><div class="time">13:00 · 必吃榜</div></div></div>
+        <div class="route-line" data-label="3km · 打车 8min · ¥18"></div>
+        <div class="route-node"><div class="route-dot treasure"></div><div class="route-info"><div class="name">东钱湖伴手礼</div><div class="time">15:00 · 麻糍 + 年糕</div></div></div>
+        <div class="route-line" data-label="5km · 打车 12min · ¥22"></div>
+        <div class="route-node"><div class="route-dot stay"></div><div class="route-info"><div class="name">庐愿·藏湖民宿</div><div class="time">17:00 · 入住</div></div></div>
+      </div>
+    </div>
+
+    <div class="route-summary">
+      <strong>💰 3 日总交通预算：¥146</strong><br>
+      打车 6 次 + 公交/地铁 ¥0 备用<br>
+      数据来源：高德/百度地图实测
+    </div>
+  </main>
+
+  <!-- ============ PAGE: ABOUT ============ -->
+  <main class="page" id="page-about">
+    <section class="hero">
+      <span class="badge">🥭 ABOUT</span>
+      <h1>关 于 芒 果 出 行</h1>
+      <div class="sub">Mango · Travel · v1.0 PWA</div>
+    </section>
+
+    <div class="about-card">
+      <h3>🥭 这份行程</h3>
+      <p>宁波 3 天美食 + 拍照行程单，结合大众点评必吃榜、黑珍珠、小红书私藏、华住会住宿策略 + 3 日距离时间路线图。<br><br>数据来源：大众点评 2025 必吃榜、黑珍珠 2025、小红书 5 万+ 篇笔记、华住会官方、宁波文旅。</p>
+    </div>
+
+    <div class="about-card">
+      <h3>📱 如何使用</h3>
+      <ul>
+        <li><strong>点 ✓ 打卡</strong> — 标记已去/未去，自动保存到本地</li>
+        <li><strong>点 🗺️ 导航</strong> — 一键跳转高德地图导航</li>
+        <li><strong>添加到主屏幕</strong> — 像 App 一样使用，离线可用</li>
+        <li><strong>点击右上 ↗</strong> — 分享给同行旅伴</li>
+      </ul>
+    </div>
+
+    <div class="about-card">
+      <h3>🍴 选店标准</h3>
+      <ul>
+        <li><strong>必吃榜 ✓</strong> — 大众点评 2025 官方认证</li>
+        <li><strong>黑珍珠</strong> — 美团 2025 一钻/二钻</li>
+        <li><strong>小红书</strong> — 用户推荐 + 实地探店</li>
+        <li><strong>踩雷</strong> — 已标注，专避坑</li>
+      </ul>
+    </div>
+
+    <div class="about-card" style="background:linear-gradient(135deg, var(--cinnabar), var(--cinnabar-light)); color:white;">
+      <h3 style="color:white;">🥭 芒果出行</h3>
+      <p style="opacity:0.9;">让每一次出发，都有迹可循。<br><br>用一份好行程，开启一段好旅程。</p>
+    </div>
+  </main>
+
+</div>
+
+<!-- Tab Bar -->
+<nav class="tabbar">
+  <div class="tabbar-inner">
+    <button class="tab active" data-page="home"><span class="ico">📍</span><span>行程</span></button>
+    <button class="tab" data-page="stay"><span class="ico">🏨</span><span>住宿</span></button>
+    <button class="tab" data-page="route"><span class="ico">🗺️</span><span>路线</span></button>
+    <button class="tab" data-page="about"><span class="ico">🥭</span><span>关于</span></button>
+  </div>
+</nav>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ============ Tab 切换 ============
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      const target = t.dataset.page;
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + target).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // ============ 打卡 ============
+  const checked = JSON.parse(localStorage.getItem('mango-checked') || '[]');
+
+  function updateStat() {
+    document.getElementById('stat-checked').textContent = checked.length;
+  }
+  updateStat();
+
+  document.querySelectorAll('.slot').forEach(slot => {
+    const id = slot.dataset.id;
+    if (checked.includes(id)) slot.classList.add('checked');
+  });
+
+  function checkSlot(btn) {
+    const slot = btn.closest('.slot');
+    const id = slot.dataset.id;
+    const idx = checked.indexOf(id);
+    if (idx >= 0) {
+      checked.splice(idx, 1);
+      slot.classList.remove('checked');
+      toast('已取消打卡');
+    } else {
+      checked.push(id);
+      slot.classList.add('checked');
+      toast('✓ 已打卡 · 进度 ' + checked.length + '/15');
+    }
+    localStorage.setItem('mango-checked', JSON.stringify(checked));
+    updateStat();
+  }
+
+  // ============ 导航 ============
+  function navTo(name) {
+    const url = `https://uri.amap.com/search?keyword=${encodeURIComponent(name)}&src=mango`;
+    window.open(url, '_blank');
+    toast('🗺️ 打开高德地图');
+  }
+
+  // ============ Toast ============
+  let toastTimer;
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  // ============ 分享 ============
+  document.getElementById('btn-share').addEventListener('click', async () => {
+    const shareData = {
+      title: '芒果出行 · 宁波三日游',
+      text: '宁波 3 天美食+拍照行程单 · 必吃榜 + 黑珍珠 + 华住会住宿',
+      url: location.href
+    };
+    if (navigator.share) {
+      try { await navigator.share(shareData); } catch(e) {}
+    } else {
+      try {
+        await navigator.clipboard.writeText(location.href);
+        toast('🔗 链接已复制');
+      } catch(e) {
+        toast('复制失败，请手动分享');
+      }
+    }
+  });
+
+  // ============ PWA Install ============
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('btn-install').style.display = 'flex';
+  });
+  document.getElementById('btn-install').addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') toast('✓ 已添加到主屏幕');
+      deferredPrompt = null;
+    }
+  });
+
+  // ============ Service Worker ============
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
+
+</body>
+</html>
