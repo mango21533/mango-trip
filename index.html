@@ -785,14 +785,14 @@ function renderRoute() {
   
   // 异步加载距离
   CURRENT.dayPlans.forEach((day, idx) => {
-    loadRouteDistances(idx, day);
+    if (day && day.slots) loadRouteDistances(idx, day);
   });
 }
 
 async function loadRouteDistances(idx, day) {
   const c = document.getElementById('route-day-' + idx);
-  if (!c) return;
-  const slots = day.slots;
+  if (!c || !day) return;
+  const slots = (day && day.slots) || [];
   if (slots.length < 2) {
     c.innerHTML = '<div style="font-size: 11px; color: var(--ink-soft);">单点行程无需路线</div>';
     return;
