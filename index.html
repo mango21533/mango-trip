@@ -919,87 +919,83 @@ function addXHSItem(type) {
 }
 
 /* ============== 榜单搜索 ============== */
+async function amapPOIAll(keyword, city, types, offset) {
+  const url = `https://restapi.amap.com/v3/place/text?key=${AMAP_KEY}&keywords=${encodeURIComponent(keyword)}&city=${encodeURIComponent(city)}&types=${types}&offset=${offset}&extensions=all`;
+  try {
+    const r = await fetch(url);
+    const d = await r.json();
+    if (d.status !== '1') return [];
+    return d.pois || [];
+  } catch(e) { return []; }
+}
+
+function getRating(p) {
+  if (!p || !p.biz_ext) return 0;
+  const r = parseFloat(p.biz_ext.rating);
+  return isNaN(r) ? 0 : r;
+}
+function getCost(p) {
+  if (!p || !p.biz_ext) return 0;
+  const c = parseInt(p.biz_ext.cost);
+  return isNaN(c) ? 0 : c;
+}
+
 async function searchDianpingList() {
   if (!CURRENT) { toast('请先生成城市'); return; }
   const btn = document.getElementById('dp-search-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> 搜索 ' + CURRENT.name + ' ' + getTypeName(CURRENT_TYPE) + '...';
 
-  try {
-    let pois = [];
-    if (CURRENT_TYPE === 'bite') {
-      // 必吃榜：搜索餐厅，按评分排序
-      const url = `https://restapi.amap.com/v3/place/text?key=${AMAP_KEY}&keywords=美食&city=${encodeURIComponent(CURRENT.name)}&types=050000&offset=50&extensions=all`;
-      const r = await fetch(url);
-      const d = await r.json();
-      if (d.status === '1' && d.pois) {
-        // 按评分降序排序
-        pois = d.pois
-          .filter(p => p.biz_ext && p.biz_ext.rating && parseFloat(p.biz_ext.rating) > 0)
-          .sort((a, b) => parseFloat(b.biz_ext.rating) - parseFloat(a.biz_ext.rating))
-          .slice(0, 20);
-      }
-    } else if (CURRENT_TYPE === 'pearl') {
-      // 黑珍珠：搜索高端餐厅
-      const url = `https://restapi.amap.com/v3/place/text?key=${AMAP_KEY}&keywords=餐厅&city=${encodeURIComponent(CURRENT.name)}&types=050000&offset=50&extensions=all`;
-      const r = await fetch(url);
-      const d = await r.json();
-      if (d.status === '1' && d.pois) {
-        pois = d.pois
-          .filter(p => p.biz_ext && p.biz_ext.cost && parseInt(p.biz_ext.cost) > 150)
-          .sort((a, b) => parseInt(b.biz_ext.cost) - parseInt(a.biz_ext.cost))
-          .slice(0, 15);
-      }
-    } else if (CURRENT_TYPE === 'hotel') {
-      // 必住榜：搜索酒店
-      const url = `https://restapi.amap.com/v3/place/text?key=${AMAP_KEY}&keywords=酒店&city=${encodeURIComponent(CURRENT.name)}&types=100000&offset=30&extensions=base`;
-      const r = await fetch(url);
-      const d = await r.json();
-      if (d.status === '1' && d.pois) {
-        pois = d.pois.slice(0, 15).map(p => ({ ...p, biz_ext: { rating: '4.0', cost: '300' } }));
-      }
-    } else if (CURRENT_TYPE === 'play') {
-      // 必玩榜：搜索景点
-      const url = `https://restapi.amap.com/v3/place/text?key=${AMAP_KEY}&keywords=景点&city=${encodeURIComponent(CURRENT.name)}&types=110000&offset=30&extensions=base`;
-      const r = await fetch(url);
-      const d = await r.json();
-      if (d.status === '1' && d.pois) {
-        pois = d.pois.slice(0, 15);
-      }
-    } else if (CURRENT_TYPE === 'michelin') {
-      // 米其林：搜索高端餐厅
-      const url = `https://restapi.amap.com/v3/place/text?key=${AMAP_KEY}&keywords=西餐厅&city=${encodeURIComponent(CURRENT.name)}&types=050000&offset=30&extensions=all`;
-      const r = await fetch(url);
-      const d = await r.json();
-      if (d.status === '1' && d.pois) {
-        pois = d.pois
-          .filter(p => p.biz_ext && p.biz_ext.cost && parseInt(p.biz_ext.cost) > 200)
-          .sort((a, b) => parseInt(b.biz_ext.cost) - parseInt(a.biz_ext.cost))
-          .slice(0, 10);
-      }
-    }
+  let pois = [];
+  let cfg;
+  if (CURRENT_TYPE === 'bite') {
+    cfg = { kw: '美食', type: '050000' };
+  } else if (CURRENT_TYPE === 'pearl') {
+    cfg = { kw: '餐厅', type: '050000' };
+  } else if (CURRENT_TYPE === 'hotel') {
+    cfg = { kw: '酒店', type: '100000' };
+  } else if (CURRENT_TYPE === 'play') {
+    cfg = { kw: '景点', type: '110000' };
+  } else if (CURRENT_TYPE === 'michelin') {
+    cfg = { kw: '西餐厅', type: '050000' };
+  }
+  if (!cfg) { btn.disabled = false; btn.textContent = '🤖 一键搜索当前城市榜单'; return; }
 
-    const items = pois.map(p => ({
+  pois = await amapPOIAll(cfg.kw, CURRENT.name, cfg.type, 50);
+
+  // 按类型筛选+排序
+  if (CURRENT_TYPE === 'bite') {
+    pois = pois.filter(p => getRating(p) > 0).sort((a,b) => getRating(b) - getRating(a)).slice(0, 20);
+  } else if (CURRENT_TYPE === 'pearl' || CURRENT_TYPE === 'michelin') {
+    pois = pois.filter(p => getCost(p) >= 150).sort((a,b) => getCost(b) - getCost(a)).slice(0, 15);
+  } else if (CURRENT_TYPE === 'hotel') {
+    pois = pois.slice(0, 20);
+  } else if (CURRENT_TYPE === 'play') {
+    pois = pois.slice(0, 20);
+  }
+
+  const items = pois.map(p => {
+    const rating = getRating(p);
+    const cost = getCost(p);
+    return {
       name: p.name,
-      cuisine: p.type || '美食',
-      price: p.biz_ext?.cost ? '¥' + p.biz_ext.cost + '/人' : (p.biz_ext?.rating ? '评分' + p.biz_ext.rating : ''),
-      rating: p.biz_ext?.rating || '',
+      cuisine: p.type || '',
+      price: cost > 0 ? '¥' + cost + '/人' : '',
+      rating: rating > 0 ? rating.toFixed(1) : '',
       desc: p.address || '',
       tel: p.tel || '',
       loc: p.location
-    }));
+    };
+  });
 
-    if (!CURRENT.dianping) CURRENT.dianping = {};
-    CURRENT.dianping[CURRENT_TYPE] = items;
-    saveCurrent();
-    renderDianping();
-    toast('✅ 找到 ' + items.length + ' 家');
-  } catch(e) {
-    toast('❌ 搜索失败：' + e.message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '🤖 一键搜索当前城市榜单';
-  }
+  if (!CURRENT.dianping) CURRENT.dianping = {};
+  CURRENT.dianping[CURRENT_TYPE] = items;
+  saveCurrent();
+  renderDianping();
+
+  btn.disabled = false;
+  btn.textContent = '🤖 一键搜索当前城市榜单';
+  toast('✅ 找到 ' + items.length + ' 家');
 }
 
 async function searchXHSList() {
