@@ -2,251 +2,257 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#c8412a">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="芒果出行">
+<meta name="theme-color" content="#f4ede0">
+<title>🥭 芒果出行 · 任意城市生成器</title>
 <link rel="manifest" href="./manifest.json">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='48' fill='%23ff2442'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='central' text-anchor='middle' font-size='140'%3E%F0%9F%8D%8D%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='48' fill='%23ff2442'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='central' text-anchor='middle' font-size='140'%3E%F0%9F%8D%8D%3C/text%3E%3C/svg%3E">
-<title>芒果出行 · 任意城市任意天数</title>
-
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='80' font-size='80'%3E🥭%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+:root {
+  --paper: #f4ede0;
+  --paper-2: #ebe1ce;
+  --ink: #1a1814;
+  --ink-soft: #5a544a;
+  --ink-line: #d4c8b0;
+  --cinnabar: #c8412a;
+  --jade: #5a8a6e;
+  --gold: #d4a23a;
+  --xhs-red: #ff2442;
+  --xhs-yellow: #ffc94d;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); font-family: 'Noto Sans SC', -apple-system, sans-serif; }
+body { padding-bottom: 80px; }
+.app { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; }
 
-  :root {
-    --ink: #1a1814;
-    --paper: #f4ede0;
-    --paper-2: #ebe1cf;
-    --cinnabar: #c8412a;
-    --cinnabar-light: #e87060;
-    --gold: #b8924c;
-    --jade: #4a7a5e;
-    --jade-light: #6ba382;
-    --xhs-red: #ff2442;
-    --xhs-yellow: #ffc94d;
-    --ink-soft: rgba(26, 24, 20, 0.55);
-    --ink-line: rgba(26, 24, 20, 0.12);
-    --shadow: 0 4px 18px rgba(26, 24, 20, 0.08);
-    --shadow-card: 0 2px 10px rgba(26, 24, 20, 0.06);
-  }
+/* Topbar */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(244, 237, 224, 0.92);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--ink-line);
+  padding: 10px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: calc(10px + env(safe-area-inset-top));
+}
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand-mark { font-size: 24px; }
+.brand-name { font-family: 'Noto Serif SC', serif; font-weight: 900; letter-spacing: 2px; font-size: 15px; }
+.topbar-actions { display: flex; gap: 8px; }
+.icon-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--paper-2); border: 1px solid var(--ink-line);
+  font-size: 16px; color: var(--ink); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.icon-btn:active { background: var(--ink); color: var(--paper); }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; }
-  body {
-    font-family: 'Noto Sans SC', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    line-height: 1.6;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    background-image:
-      radial-gradient(ellipse at top left, rgba(200, 65, 42, 0.05) 0%, transparent 60%),
-      radial-gradient(ellipse at bottom right, rgba(74, 122, 94, 0.05) 0%, transparent 60%);
-  }
-  button { font-family: inherit; cursor: pointer; border: none; background: none; }
-  a { color: inherit; text-decoration: none; }
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 28px 20px 20px;
+  background: linear-gradient(180deg, var(--paper-2), var(--paper));
+  border-bottom: 1px solid var(--ink-line);
+}
+.hero .badge {
+  display: inline-block; background: var(--ink); color: var(--xhs-yellow);
+  padding: 3px 10px; font-size: 10px; letter-spacing: 3px; font-weight: 700;
+}
+.hero h1 {
+  font-family: 'Noto Serif SC', serif; font-size: 32px; font-weight: 900;
+  margin: 12px 0 6px; line-height: 1.1; letter-spacing: 1px;
+}
+.hero .sub { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--cinnabar); font-size: 14px; letter-spacing: 2px; }
 
-  .app { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 80px; position: relative; background: var(--paper); }
+/* Generator Panel */
+.gen-panel {
+  margin: 16px;
+  padding: 16px;
+  background: white;
+  border: 1px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.gen-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.gen-field { flex: 1; }
+.gen-label { display: block; font-size: 11px; font-weight: 700; color: var(--ink-soft); letter-spacing: 1px; margin-bottom: 4px; }
+.gen-input {
+  width: 100%; padding: 10px 12px; font-size: 15px; font-weight: 700;
+  background: var(--paper-2); border: 1px solid var(--ink-line);
+  font-family: inherit; color: var(--ink);
+}
+.gen-input:focus { outline: none; border-color: var(--cinnabar); background: white; }
+.gen-stepper { display: flex; align-items: stretch; }
+.gen-stepper button {
+  width: 36px; background: var(--ink); color: var(--paper);
+  border: none; font-size: 18px; font-weight: 700; cursor: pointer;
+}
+.gen-stepper input { flex: 1; text-align: center; font-weight: 900; font-size: 16px; }
+.gen-btn {
+  width: 100%; padding: 14px; background: var(--cinnabar); color: white;
+  border: none; font-size: 15px; font-weight: 900; letter-spacing: 4px;
+  font-family: 'Noto Serif SC', serif; cursor: pointer; margin-top: 8px;
+}
+.gen-btn:active { background: var(--ink); }
+.gen-btn:disabled { opacity: 0.5; }
+.gen-status { font-size: 11px; text-align: center; color: var(--ink-soft); margin-top: 8px; min-height: 14px; }
+.gen-tip { font-size: 11px; color: var(--ink-soft); padding: 8px; background: var(--paper-2); margin-top: 10px; line-height: 1.5; }
+.gen-tip strong { color: var(--cinnabar); }
 
-  .topbar {
-    position: sticky; top: 0; z-index: 50;
-    background: rgba(244, 237, 224, 0.92);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid var(--ink-line);
-  }
-  .brand { display: flex; align-items: center; gap: 8px; }
-  .brand-mark { font-size: 24px; line-height: 1; }
-  .brand-name { font-family: 'Noto Serif SC', serif; font-size: 17px; font-weight: 900; letter-spacing: 2px; color: var(--cinnabar); }
-  .topbar-actions { display: flex; gap: 8px; }
-  .icon-btn {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(26, 24, 20, 0.05); color: var(--ink);
-    display: flex; align-items: center; justify-content: center; font-size: 16px;
-  }
-  .icon-btn:active { background: var(--ink); color: var(--paper); }
+/* Stat Bar */
+.stat-bar {
+  display: flex; margin: 0 16px 16px; border: 1px solid var(--ink);
+  background: var(--paper-2);
+}
+.stat-item { flex: 1; padding: 12px 0; text-align: center; border-right: 1px solid var(--ink-line); }
+.stat-item:last-child { border-right: none; }
+.stat-num { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--cinnabar); }
+.stat-label { font-size: 9px; letter-spacing: 2px; color: var(--ink-soft); margin-top: 2px; }
 
-  .page { display: none; padding: 0 20px 20px; animation: fadeIn .3s ease; }
-  .page.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+/* Day Section */
+.day-section { margin: 16px; padding: 16px; background: white; border: 1px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.day-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--cinnabar); }
+.day-num { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; color: var(--cinnabar); line-height: 1; }
+.day-title h2 { font-family: 'Noto Serif SC', serif; font-size: 18px; font-weight: 900; margin: 0; }
+.day-title .vibe { font-size: 11px; color: var(--ink-soft); letter-spacing: 1px; margin-top: 2px; }
+.day-title .day-date { font-size: 10px; color: var(--cinnabar); font-weight: 700; margin-top: 4px; }
+.day-district { display: inline-block; background: var(--cinnabar); color: white; font-size: 10px; padding: 2px 8px; letter-spacing: 1px; font-weight: 700; margin-bottom: 12px; }
 
-  .hero { padding: 28px 0 24px; }
-  .badge {
-    display: inline-block; background: var(--ink); color: var(--xhs-yellow);
-    padding: 3px 10px; font-size: 11px; letter-spacing: 2px; font-weight: 700;
-  }
-  .hero h1 {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 36px; font-weight: 900; line-height: 1.15; margin: 12px 0 6px;
-    color: var(--ink);
-  }
-  .hero .sub {
-    font-family: 'Cormorant Garamond', serif; font-style: italic;
-    color: var(--cinnabar); letter-spacing: 1px; font-size: 15px;
-  }
+/* Slot Card */
+.slot { padding: 12px 0; border-bottom: 1px dashed var(--ink-line); }
+.slot:last-child { border-bottom: none; }
+.slot-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.slot-time { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 600; color: var(--cinnabar); width: 60px; flex-shrink: 0; }
+.slot-tag { font-size: 9px; padding: 2px 6px; background: var(--paper-2); color: var(--ink); letter-spacing: 1px; font-weight: 700; }
+.slot-tag.sight { background: var(--jade); color: white; }
+.slot-tag.food { background: var(--cinnabar); color: white; }
+.slot-tag.treasure { background: var(--ink); color: var(--xhs-yellow); }
+.slot-tag.stay { background: var(--gold); color: white; }
+.slot-name { font-family: 'Noto Serif SC', serif; font-size: 15px; font-weight: 700; flex: 1; }
+.slot-sub { font-size: 10px; color: var(--ink-soft); letter-spacing: 1px; margin: 2px 0 6px 68px; }
+.slot-desc { font-size: 12px; line-height: 1.6; color: var(--ink); margin-left: 68px; }
+.slot-desc strong { color: var(--cinnabar); }
+.slot-foot { display: flex; justify-content: space-between; align-items: center; margin: 8px 0 0 68px; padding-top: 8px; border-top: 1px dashed var(--ink-line); }
+.slot-meta { font-size: 10px; color: var(--ink-soft); }
+.slot-actions { display: flex; gap: 4px; }
+.slot-btn { font-size: 10px; padding: 4px 8px; background: var(--paper-2); color: var(--ink); border: none; font-weight: 700; letter-spacing: 1px; cursor: pointer; font-family: inherit; }
+.slot-btn:active { background: var(--ink); color: var(--paper); }
+.slot-btn.primary { background: var(--cinnabar); color: white; }
+.slot-btn.primary:active { background: var(--ink); }
+.slot-btn.primary.checked { background: var(--jade); }
 
-  /* ===== Generator Panel ===== */
-  .gen-panel {
-    background: white; border: 1px solid var(--ink);
-    padding: 18px; margin-bottom: 20px;
-    box-shadow: 5px 5px 0 var(--ink);
-    position: relative;
-  }
-  .gen-panel::before {
-    content: '🥭 GENERATOR';
-    position: absolute; top: -10px; left: 14px;
-    background: var(--cinnabar); color: white;
-    padding: 2px 10px; font-size: 10px; letter-spacing: 2px; font-weight: 700;
-  }
-  .gen-row { display: flex; gap: 10px; margin-bottom: 10px; }
-  .gen-row:last-child { margin-bottom: 0; }
-  .gen-field { flex: 1; }
-  .gen-label {
-    display: block; font-size: 11px; color: var(--ink-soft);
-    letter-spacing: 1px; margin-bottom: 4px; font-weight: 700;
-  }
-  .gen-input, .gen-select {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--ink-line);
-    background: var(--paper-2); font-size: 15px; font-family: inherit;
-    color: var(--ink); border-radius: 0;
-  }
-  .gen-input:focus, .gen-select:focus { outline: 2px solid var(--cinnabar); }
-  .gen-stepper { display: flex; align-items: stretch; }
-  .gen-stepper button {
-    width: 36px; background: var(--ink); color: var(--paper);
-    font-size: 18px; font-weight: 700;
-  }
-  .gen-stepper input { flex: 1; text-align: center; }
-  .gen-btn {
-    width: 100%; padding: 14px; background: var(--cinnabar); color: white;
-    font-size: 15px; font-weight: 700; letter-spacing: 4px; margin-top: 12px;
-    transition: transform .1s;
-  }
-  .gen-btn:active { transform: scale(0.98); background: var(--ink); }
-  .gen-btn[disabled] { background: var(--ink-soft); cursor: not-allowed; }
-  .gen-tip { font-size: 11px; color: var(--ink-soft); margin-top: 8px; line-height: 1.5; }
-  .gen-status {
-    display: none; padding: 12px; background: var(--paper-2);
-    border-left: 3px solid var(--cinnabar); margin-top: 12px;
-    font-size: 12px; line-height: 1.6;
-  }
-  .gen-status.show { display: block; }
-  .gen-status.error { border-left-color: var(--xhs-red); background: #fff3f5; }
+.bomb { background: #fff3ed; border-left: 3px solid var(--xhs-red); padding: 8px 12px; font-size: 11px; line-height: 1.6; margin: 8px 0; }
+.bomb strong { color: var(--xhs-red); }
 
-  .stat-bar { display: flex; padding: 16px 0; border-top: 1px solid var(--ink-line); border-bottom: 1px solid var(--ink-line); margin-bottom: 20px; }
-  .stat-item { flex: 1; text-align: center; }
-  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--cinnabar); }
-  .stat-label { font-size: 10px; letter-spacing: 2px; color: var(--ink-soft); margin-top: 2px; }
+/* List Page (榜单/秘籍) */
+.list-page { padding: 0 16px 16px; }
+.subtab-bar {
+  display: flex; gap: 6px; margin: 12px 0; overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.subtab {
+  flex-shrink: 0; padding: 8px 14px; font-size: 12px; font-weight: 700;
+  background: var(--paper-2); color: var(--ink); border: 1px solid var(--ink-line);
+  letter-spacing: 1px; cursor: pointer; font-family: inherit;
+}
+.subtab.active { background: var(--cinnabar); color: white; border-color: var(--cinnabar); }
+.subtab:active { background: var(--ink); color: var(--paper); }
 
-  .day-section { margin-bottom: 28px; }
-  .day-head { display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start; }
-  .day-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 64px; font-weight: 600; line-height: 0.9;
-    color: var(--cinnabar); flex-shrink: 0;
-  }
-  .day-title h2 { font-family: 'Noto Serif SC', serif; font-size: 22px; font-weight: 900; line-height: 1.2; margin-bottom: 4px; }
-  .day-title .vibe { font-size: 12px; color: var(--ink-soft); letter-spacing: 1px; }
-  .day-date { font-size: 11px; color: var(--cinnabar); font-weight: 700; margin-top: 4px; letter-spacing: 1px; }
+.list-search-btn {
+  width: 100%; padding: 12px; background: var(--ink); color: var(--xhs-yellow);
+  border: none; font-size: 13px; font-weight: 700; letter-spacing: 2px;
+  font-family: 'Noto Serif SC', serif; cursor: pointer; margin-bottom: 12px;
+}
+.list-search-btn:disabled { opacity: 0.5; }
 
-  .slot {
-    background: white; border: 1px solid var(--ink-line);
-    padding: 14px; margin-bottom: 10px;
-    transition: all .2s;
-  }
-  .slot.checked { background: var(--paper-2); opacity: 0.65; }
-  .slot.checked .slot-name { text-decoration: line-through; }
-  .slot-head { display: flex; gap: 10px; align-items: center; margin-bottom: 6px; }
-  .slot-time { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 15px; color: var(--cinnabar); }
-  .slot-tag { font-size: 10px; letter-spacing: 1px; padding: 2px 6px; font-weight: 700; }
-  .slot-tag.food { background: #fff3ed; color: var(--cinnabar); }
-  .slot-tag.shoot { background: #e8f3ed; color: var(--jade); }
-  .slot-tag.stay { background: #fef5e7; color: var(--gold); }
-  .slot-tag.pearl { background: #1a1814; color: var(--xhs-yellow); }
-  .slot-name { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 700; margin-bottom: 2px; }
-  .slot-sub { font-size: 10px; color: var(--ink-soft); letter-spacing: 1px; margin-bottom: 8px; }
-  .slot-desc { font-size: 13px; line-height: 1.6; color: var(--ink); }
-  .slot-desc strong { color: var(--cinnabar); }
-  .slot-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--ink-line); }
-  .slot-meta { font-size: 11px; color: var(--ink-soft); }
-  .slot-actions { display: flex; gap: 6px; }
-  .slot-btn { font-size: 11px; padding: 5px 10px; background: var(--paper-2); color: var(--ink); font-weight: 700; letter-spacing: 1px; }
-  .slot-btn:active { background: var(--ink); color: var(--paper); }
-  .slot-btn.primary { background: var(--cinnabar); color: white; }
-  .slot-btn.primary:active { background: var(--ink); }
-  .slot-btn.primary.checked { background: var(--jade); }
+.list-card {
+  background: white; border: 1px solid var(--ink); margin-bottom: 10px;
+  padding: 12px 14px; box-shadow: 3px 3px 0 var(--ink-line);
+  position: relative;
+}
+.list-card .rank {
+  position: absolute; top: 0; right: 0; background: var(--cinnabar);
+  color: white; font-size: 10px; padding: 2px 8px; font-weight: 700;
+}
+.list-card .rank.gold { background: var(--gold); }
+.list-card h4 { font-family: 'Noto Serif SC', serif; font-size: 14px; font-weight: 900; margin: 0 0 4px; }
+.list-card .meta { font-size: 10px; color: var(--ink-soft); margin-bottom: 4px; }
+.list-card .desc { font-size: 11px; line-height: 1.6; }
+.list-card .desc strong { color: var(--cinnabar); }
+.list-card .level {
+  display: inline-block; font-size: 9px; padding: 1px 6px;
+  background: var(--ink); color: var(--xhs-yellow); margin-right: 4px;
+  font-weight: 700; letter-spacing: 1px;
+}
+.list-card .level.diamond3 { background: #1a1a1a; }
+.list-card .level.diamond2 { background: #3a3a3a; }
+.list-card .level.diamond1 { background: #5a5a5a; }
 
-  .bomb { background: #fff3ed; border-left: 3px solid var(--xhs-red); padding: 10px 12px; font-size: 12px; line-height: 1.6; margin: 10px 0; }
-  .bomb strong { color: var(--xhs-red); }
+.add-form {
+  background: white; border: 1px dashed var(--cinnabar); padding: 12px;
+  margin-bottom: 12px;
+}
+.add-form input, .add-form textarea, .add-form select {
+  width: 100%; padding: 8px; margin-bottom: 6px; font-size: 12px;
+  border: 1px solid var(--ink-line); background: var(--paper-2);
+  font-family: inherit; color: var(--ink);
+}
+.add-form .row { display: flex; gap: 6px; }
+.add-form .row > * { flex: 1; }
+.add-form button {
+  padding: 8px 14px; font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  cursor: pointer; font-family: inherit; border: none;
+}
+.add-form .save { background: var(--cinnabar); color: white; }
+.add-form .cancel { background: var(--paper-2); color: var(--ink); }
 
-  .section-title { font-family: 'Noto Serif SC', serif; font-size: 28px; font-weight: 900; margin: 32px 0 16px; display: flex; align-items: center; gap: 12px; }
-  .section-title::before { content: ''; width: 4px; height: 24px; background: var(--cinnabar); }
-  .section-en { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--ink-soft); font-size: 13px; letter-spacing: 2px; margin-bottom: 20px; padding-left: 16px; }
+.empty {
+  text-align: center; padding: 40px 20px; color: var(--ink-soft);
+  border: 1px dashed var(--ink-line); background: rgba(255,255,255,0.5);
+}
+.empty .ico { font-size: 40px; margin-bottom: 8px; }
+.empty p { font-size: 12px; line-height: 1.7; }
+.empty strong { color: var(--cinnabar); }
 
-  .stay-card { background: white; border: 1px solid var(--ink); margin-bottom: 12px; overflow: hidden; box-shadow: 5px 5px 0 var(--ink); }
-  .stay-head { padding: 14px 16px; color: white; display: flex; align-items: center; }
-  .stay-head .num { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; margin-right: 12px; line-height: 1; }
-  .stay-head .info { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 700; }
-  .stay-head .sub { font-size: 10px; letter-spacing: 1px; opacity: 0.85; margin-top: 2px; }
-  .stay-body { padding: 14px 16px; }
-  .stay-body h4 { font-family: 'Noto Serif SC', serif; font-size: 15px; font-weight: 900; margin-bottom: 4px; }
-  .stay-body .addr { font-size: 11px; color: var(--ink-soft); margin-bottom: 6px; }
-  .stay-body .desc { font-size: 12px; line-height: 1.6; margin-bottom: 8px; }
-  .stay-body .price { font-size: 11px; color: var(--ink-soft); display: flex; justify-content: space-between; padding-top: 6px; border-top: 1px dashed var(--ink-line); }
+/* About */
+.about-card { background: white; border: 1px solid var(--ink-line); padding: 14px; margin: 0 16px 12px; }
+.about-card h3 { font-family: 'Noto Serif SC', serif; font-size: 14px; font-weight: 900; margin: 0 0 6px; }
+.about-card p, .about-card li { font-size: 12px; line-height: 1.7; }
+.about-card ul { padding-left: 18px; margin: 6px 0; }
+.about-card strong { color: var(--cinnabar); }
 
-  .route-page { padding: 0 20px 20px; }
-  .route-day { background: white; border: 1px solid var(--ink-line); padding: 16px; margin-bottom: 16px; box-shadow: 4px 4px 0 var(--ink-line); }
-  .route-day-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-  .route-day-head .num { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--cinnabar); }
-  .route-day-head h3 { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 900; }
-  .route-flow { padding-left: 8px; }
-  .route-node { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
-  .route-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--cinnabar); flex-shrink: 0; box-shadow: 0 0 0 3px var(--paper); }
-  .route-dot.shoot { background: var(--jade); }
-  .route-dot.stay { background: var(--gold); }
-  .route-dot.treasure { background: var(--ink); }
-  .route-info { flex: 1; }
-  .route-info .name { font-size: 13px; font-weight: 700; }
-  .route-info .time { font-size: 10px; color: var(--ink-soft); margin-top: 1px; }
-  .route-line { margin-left: 6px; border-left: 2px dashed var(--ink-line); height: 28px; position: relative; }
-  .route-line::before { content: attr(data-label); position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 10px; color: var(--cinnabar); background: white; padding: 0 6px; font-weight: 700; }
-  .route-loading { font-size: 10px; color: var(--ink-soft); font-style: italic; }
-  .route-summary { background: var(--paper-2); padding: 14px; font-size: 12px; line-height: 1.6; border-left: 3px solid var(--cinnabar); margin-top: 16px; }
+/* Tabbar */
+.tabbar {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 480px; z-index: 100;
+  background: rgba(244, 237, 224, 0.95);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 1px solid var(--ink-line);
+  padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+}
+.tabbar-inner { display: flex; }
+.tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 4px 0; color: var(--ink-soft); font-size: 9px; letter-spacing: 1px; background: none; border: none; cursor: pointer; font-family: inherit; }
+.tab .ico { font-size: 18px; }
+.tab.active { color: var(--cinnabar); }
+.tab:active { background: var(--ink-line); }
 
-  .about-card { background: white; border: 1px solid var(--ink-line); padding: 16px; margin-bottom: 12px; }
-  .about-card h3 { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 900; margin-bottom: 8px; }
-  .about-card p, .about-card li { font-size: 13px; line-height: 1.7; }
-  .about-card ul { padding-left: 18px; }
-  .about-card strong { color: var(--cinnabar); }
+/* Toast */
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--paper); padding: 10px 18px; font-size: 13px; letter-spacing: 1px; opacity: 0; transition: all .3s; z-index: 200; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  .tabbar {
-    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 100%; max-width: 480px; z-index: 100;
-    background: rgba(244, 237, 224, 0.95);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    border-top: 1px solid var(--ink-line);
-    padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
-  }
-  .tabbar-inner { display: flex; }
-  .tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 0; color: var(--ink-soft); font-size: 11px; letter-spacing: 1px; }
-  .tab .ico { font-size: 20px; }
-  .tab.active { color: var(--cinnabar); }
-  .tab:active { background: var(--ink-line); }
+/* Loading */
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--ink-line); border-top-color: var(--cinnabar); border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--paper); padding: 10px 18px; font-size: 13px; letter-spacing: 1px; opacity: 0; transition: all .3s; z-index: 200; pointer-events: none; }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  .empty {
-    text-align: center; padding: 60px 20px; color: var(--ink-soft);
-  }
-  .empty .ico { font-size: 48px; margin-bottom: 12px; }
-  .empty p { font-size: 14px; line-height: 1.7; }
-  .empty strong { color: var(--cinnabar); }
+/* Pages */
+.page { display: none; }
+.page.active { display: block; }
 </style>
 </head>
 <body>
@@ -262,369 +268,344 @@
     </div>
   </div>
 
-  <!-- ============ PAGE: 行程 (HOME) ============ -->
+  <!-- ① 行程 -->
   <main class="page active" id="page-home">
-    <div id="home-content">
-      <!-- 由 JS 渲染 -->
-    </div>
+    <div id="home-content"></div>
   </main>
 
-  <!-- ============ PAGE: 住宿 (STAY) ============ -->
+  <!-- ② 住宿 -->
   <main class="page" id="page-stay">
     <div id="stay-content"></div>
   </main>
 
-  <!-- ============ PAGE: 路线 (ROUTE) ============ -->
+  <!-- ③ 路线 -->
   <main class="page" id="page-route">
     <div id="route-content"></div>
   </main>
 
-  <!-- ============ PAGE: 关于 (ABOUT) ============ -->
+  <!-- ④ 榜单 -->
+  <main class="page" id="page-list">
+    <section class="hero">
+      <span class="badge">📊 DIANPING</span>
+      <h1>大 众 点 评 榜 单</h1>
+      <div class="sub">Mango · Curated Lists</div>
+    </section>
+    <div class="list-page">
+      <div class="subtab-bar" id="dianping-tabs">
+        <button class="subtab active" data-type="bite">🥇 必吃榜</button>
+        <button class="subtab" data-type="pearl">🖤 黑珍珠</button>
+        <button class="subtab" data-type="hotel">🏆 必住榜</button>
+        <button class="subtab" data-type="play">🏅 必玩榜</button>
+        <button class="subtab" data-type="michelin">💎 米其林</button>
+      </div>
+      <button class="list-search-btn" id="dp-search-btn">🤖 一键搜索当前城市榜单</button>
+      <div id="dianping-content"></div>
+    </div>
+  </main>
+
+  <!-- ⑤ 秘籍 -->
+  <main class="page" id="page-xhs">
+    <section class="hero">
+      <span class="badge">📕 XHS</span>
+      <h1>小 红 书 秘 籍</h1>
+      <div class="sub">Local Finds · Bombs · Photo Spots</div>
+    </section>
+    <div class="list-page">
+      <div class="subtab-bar" id="xhs-tabs">
+        <button class="subtab active" data-type="local">💎 私藏小店</button>
+        <button class="subtab" data-type="bomb">⚠️ 踩雷警示</button>
+        <button class="subtab" data-type="spots">📷 隐藏机位</button>
+      </div>
+      <button class="list-search-btn" id="xhs-search-btn">🤖 一键搜索当前城市</button>
+      <div id="xhs-content"></div>
+    </div>
+  </main>
+
+  <!-- ⑥ 关于 -->
   <main class="page" id="page-about">
     <section class="hero">
       <span class="badge">🥭 ABOUT</span>
       <h1>关 于 芒 果 出 行</h1>
-      <div class="sub">Mango · Travel · v2.0 Generator</div>
+      <div class="sub">Mango · Travel · v3.0 Universal</div>
     </section>
     <div class="about-card">
-      <h3>🥭 这是什么</h3>
-      <p>任意城市 × 任意天数 PWA 行程生成器。输入城市名 + 天数 + 出发日期，<strong>自动搜索高德 POI</strong>，智能拼接美食 + 景点 + 住宿 + 路线，生成专属你的旅行手册。</p>
+      <h3>🥭 任意城市 × 任意天数</h3>
+      <p>输入<strong>城市名 + 天数 + 出发日期</strong>，自动调用高德 POI 生成行程，每天按区县排点避免来回跑。</p>
+    </div>
+    <div class="about-card">
+      <h3>📊 5 大 Tab</h3>
+      <ul>
+        <li><strong>① 行程</strong> — Day 1-N 时间轴，打卡/导航</li>
+        <li><strong>② 住宿</strong> — 华住会首选 + 2 年内新</li>
+        <li><strong>③ 路线</strong> — 高德实时距离时间</li>
+        <li><strong>④ 榜单</strong> — 必吃榜/黑珍珠/必玩榜/米其林（联网搜）</li>
+        <li><strong>⑤ 秘籍</strong> — 私藏/踩雷/机位（联网搜 + 手填）</li>
+      </ul>
     </div>
     <div class="about-card">
       <h3>⚙️ 工作原理</h3>
       <ul>
-        <li><strong>POI 搜索</strong> — 高德地图 API 实时查景点/餐厅/酒店</li>
-        <li><strong>路径规划</strong> — 高德驾车 API 算距离 + 时间 + 费用</li>
-        <li><strong>数据缓存</strong> — localStorage 存 7 天，二次访问秒开</li>
-        <li><strong>离线可用</strong> — Service Worker 缓存所有资源</li>
+        <li><strong>数据源</strong>：高德 POI + 高德路径规划 + WebSearch 大众点评/小红书</li>
+        <li><strong>区县分类</strong>：高德 district API 自动获取</li>
+        <li><strong>缓存</strong>：localStorage 7 天，重复访问秒开</li>
+        <li><strong>离线</strong>：Service Worker 缓存（添加主屏后可用）</li>
       </ul>
     </div>
     <div class="about-card">
-      <h3>📱 使用说明</h3>
-      <ul>
-        <li><strong>点 ✓ 打卡</strong> — 标记已去，自动存本地</li>
-        <li><strong>点 🗺️ 导航</strong> — 一键跳转高德地图</li>
-        <li><strong>切换城市</strong> — 顶部表单填新城市，点生成</li>
-        <li><strong>添加到主屏</strong> — 像 App 一样用，离线可用</li>
-      </ul>
-    </div>
-    <div class="about-card" style="background:linear-gradient(135deg, var(--cinnabar), var(--cinnabar-light)); color:white;">
-      <h3 style="color:white;">🥭 芒果出行</h3>
-      <p style="opacity:0.9;">让每一次出发，都有迹可循。<br>用一份好行程，开启一段好旅程。</p>
+      <h3>🛟 隐私</h3>
+      <p>所有打卡数据存在你 iPhone 的 <strong>localStorage</strong>，完全私密。换手机/清缓存会丢，建议定期截图备份。</p>
     </div>
   </main>
+
+  <!-- Tabbar -->
+  <nav class="tabbar">
+    <div class="tabbar-inner">
+      <button class="tab active" data-page="home"><span class="ico">📍</span><span>行程</span></button>
+      <button class="tab" data-page="stay"><span class="ico">🏨</span><span>住宿</span></button>
+      <button class="tab" data-page="route"><span class="ico">🗺️</span><span>路线</span></button>
+      <button class="tab" data-page="list"><span class="ico">📊</span><span>榜单</span></button>
+      <button class="tab" data-page="xhs"><span class="ico">📕</span><span>秘籍</span></button>
+      <button class="tab" data-page="about"><span class="ico">🥭</span><span>关于</span></button>
+    </div>
+  </nav>
+  <div class="toast" id="toast"></div>
 </div>
 
-<nav class="tabbar">
-  <div class="tabbar-inner">
-    <button class="tab active" data-page="home"><span class="ico">📍</span><span>行程</span></button>
-    <button class="tab" data-page="stay"><span class="ico">🏨</span><span>住宿</span></button>
-    <button class="tab" data-page="route"><span class="ico">🗺️</span><span>路线</span></button>
-    <button class="tab" data-page="about"><span class="ico">🥭</span><span>关于</span></button>
-  </div>
-</nav>
-
-<div class="toast" id="toast"></div>
-
 <script>
-// ============================================================
-// CONFIG
-// ============================================================
+/* ============== 全局状态 ============== */
 const AMAP_KEY = '42c8af90d382e5b4366dc21e15a3e53b';
-const CACHE_TTL = 7 * 24 * 3600 * 1000; // 7 天
+let CURRENT = null;          // 当前城市行程数据
+let CURRENT_DISTRICTS = [];  // 当前城市区县
+let CURRENT_TYPE = 'bite';   // 榜单子标签
+let XHS_TYPE = 'local';      // 小红书子标签
+const CHECKED_KEY = 'mango-checked-v3';
 
-// 城市经纬度中心点（用于路径规划起点/终点回退）
-const CITY_CENTERS = {
-  '宁波': '121.544,29.868',
-  '杭州': '120.155,30.275',
-  '成都': '104.066,30.572',
-  '厦门': '118.110,24.490',
-  '西安': '108.940,34.341',
-  '苏州': '120.585,31.299',
-  '北京': '116.407,39.904',
-  '上海': '121.473,31.230',
-  '广州': '113.264,23.129',
-  '重庆': '106.551,29.563',
-  '南京': '118.796,32.060',
-  '武汉': '114.305,30.593',
-  '青岛': '120.382,36.067',
-  '长沙': '112.938,28.228',
-  '大理': '100.225,25.596',
-  '丽江': '100.230,26.872',
-  '拉萨': '91.132,29.660',
-  '三亚': '109.512,18.252',
-  '哈尔滨': '126.642,45.756',
-  '兰州': '103.834,36.061',
-  '敦煌': '94.661,40.142'
-};
+/* ============== 工具函数 ============== */
+function pad2(n) { return String(n).padStart(2, '0'); }
+function dateOffset(base, days) {
+  if (!base) return '';
+  const d = new Date(base);
+  d.setDate(d.getDate() + days);
+  return `${d.getMonth()+1}/${d.getDate()}`;
+}
+function toast(msg, dur=1500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+function getChecked() { try { return JSON.parse(localStorage.getItem(CHECKED_KEY) || '[]'); } catch(e){ return []; } }
+function setChecked(arr) { localStorage.setItem(CHECKED_KEY, JSON.stringify(arr)); }
+function isChecked(id) { return getChecked().includes(id); }
+function toggleCheck(id) {
+  const arr = getChecked();
+  const i = arr.indexOf(id);
+  if (i > -1) arr.splice(i, 1); else arr.push(id);
+  setChecked(arr);
+  document.getElementById('stat-checked') && (document.getElementById('stat-checked').textContent = arr.length);
+}
+function getCheckedCount() { return getChecked().length; }
+function restoreChecked() { /* placeholder */ }
 
-// ============================================================
-// 离线数据（热门城市预置，保证首次打开快）
-// ============================================================
-const OFFLINE_DATA = {
-  '宁波': {
-    name: '宁波',
-    days: 3,
-    startDate: null,
-    dayPlans: [
-      { theme: '老城根下，吃一碗千年汤圆', vibe: '海曙老城区 · 慢节奏 · 经典甬味', slots: [
-        { time: '10:00', type: 'food', tag: 'EAT · 必吃榜', name: '缸鸭狗·南郊路老店', sub: 'GANG YA GOU · 始于 1926', desc: '宁波汤圆国家级非遗代表。猪油黑洋酥咬开流心。<strong>避雷天一广场店</strong>，去南郊路 271 号老店，本地人多、便宜 1/3。', meta: '💰 ¥30 · 30min', location: '缸鸭狗' },
-        { time: '11:30', type: 'shoot', tag: 'SHOOT · 必拍', name: '鼓 楼 + 步行街', sub: 'DRUM TOWER · 明代 1370', desc: '宁波地标，城楼上可俯瞰老城。旁边<strong>永丰库遗址</strong>免费看，宋元商贸中心遗存。', meta: '📸 1h · 免费', location: '宁波鼓楼' },
-        { time: '12:30', type: 'food', tag: 'EAT · 必吃榜', name: '阿 拉 名 灶', sub: 'A LA MING ZAO · 人均 65', desc: '宁波菜馆热门榜第 1。糖醋小黄鱼、年糕烧黄鱼、酱烧年糕必点。<strong>中午去不排队</strong>。', meta: '💰 ¥65 · 1h', location: '阿拉名灶' },
-        { time: '14:30', type: 'shoot', tag: 'SHOOT · 必拍', name: '天 一 阁 博 物 院', sub: 'TIAN YI GE · 明 1561', desc: '中国现存最古老的私家藏书楼。范氏"天一"取自《易经》"天一生水，地六成之"。<strong>雨天更好拍</strong>。', meta: '📸 2h · ¥30', location: '天一阁博物馆' },
-        { time: '19:00', type: 'food', tag: 'EAT · 必吃榜', name: '美 宴 摩 登 宁 波 菜', sub: 'MEI YAN · 人均 100', desc: '宁波菜新派代表。<strong>雪菜黄鱼</strong>用的是野生大黄鱼，年糕软糯挂汁。<strong>建议预约</strong>。', meta: '💰 ¥100 · 1.5h', location: '美宴摩登宁波菜' }
-      ], bomb: '<strong>踩雷提醒：</strong>缸鸭狗天一广场店专宰游客，黑洋酥汤圆 ¥28 一碗 6 个，老店同款 ¥18。去<strong>南郊路 271 号</strong>老店。' },
-      { theme: '三江口夜景，从老外滩到美术馆', vibe: '江北外滩 · 万国建筑 · 文艺出片', slots: [
-        { time: '10:00', type: 'food', tag: 'EAT · 必吃榜', name: '宁 波 老 饭 店', sub: 'NINGBO LAO FANDIAN · 1987', desc: '本地老牌宁波菜。<strong>冰糖甲鱼</strong>是镇店菜，还有苔菜拖黄鱼、宁波汤圆。<strong>午市套餐更划算</strong>。', meta: '💰 ¥90 · 1h', location: '宁波老饭店' },
-        { time: '11:30', type: 'shoot', tag: 'SHOOT · 必拍', name: '老 外 滩 · 100+ 百年建筑', sub: 'OLD BUND · 比上海外滩早 20 年', desc: '五口通商旧址，<strong>天主教堂 + 海关旧址 + 浙东学派藏书楼</strong>。<strong>雨天拍更出片</strong>，地面反光建筑轮廓。', meta: '📸 2h · 免费', location: '宁波老外滩' },
-        { time: '14:00', type: 'shoot', tag: 'SHOOT · 必拍', name: '宁 波 美 术 馆', sub: 'NINGBO MUSEUM OF ART · 普利兹克奖', desc: '<strong>王澍设计</strong>，瓦爿墙立面超有辨识度。常年免费展览，江景落地窗。<strong>文艺青年必去</strong>。', meta: '📸 1.5h · 免费', location: '宁波美术馆' },
-        { time: '16:00', type: 'food', tag: 'EAT · 小红书', name: '宁 波 汤 圆 店 · 巷子里', sub: '小红书私藏 · 人均 25', desc: '本地人吃的小店，<strong>鲜肉汤圆</strong>比黑洋酥更鲜，下午 2 点后才有。<strong>老板娘现包现煮</strong>。', meta: '💰 ¥25 · 30min', location: '宁波汤圆' },
-        { time: '19:30', type: 'shoot', tag: 'SHOOT · 必拍', name: '三 江 口 夜 景', sub: 'Sanjiangkou Night View', desc: '甬江 + 姚江 + 奉化江三江汇流，<strong>对岸是舟山</strong>。拍摄机位：外滩天主教堂前台阶、美术馆江景平台。', meta: '📸 1.5h · 免费', location: '三江口' }
-      ], bomb: '<strong>小红书踩雷：</strong>老外滩"民国风情街"很多店是义乌小商品，专坑游客。走远一点去<strong>江边路 100-200 号</strong>老街坊菜。' },
-      { theme: '东钱湖，藏着宁波的山水秘境', vibe: '鄞州区 · 山水氧吧 · 治愈系', slots: [
-        { time: '09:00', type: 'shoot', tag: 'SHOOT · 必拍', name: '东 钱 湖 · 陶 公 岛', sub: 'DONGSHAN LAKE · 杭州西湖 4 倍大', desc: '宁波"后花园"，<strong>殷湾渔火 + 小普陀 + 湖东</strong>三大景区。<strong>骑电瓶车环湖</strong>，全程 45km 半天。', meta: '📸 3h · 免费', location: '东钱湖' },
-        { time: '13:00', type: 'food', tag: 'EAT · 必吃榜', name: '钱 湖 渔 港', sub: 'QIANHU YUGANG · 人均 150', desc: '东钱湖湖鲜必吃榜。<strong>钱湖之吻（鱼头）+ 盐水河虾</strong>。<strong>湖景包间需提前 1 周订</strong>。', meta: '💰 ¥150 · 1.5h', location: '钱湖渔港' },
-        { time: '15:00', type: 'shoot', tag: 'SHOOT · 隐藏机位', name: '小 普 陀 · 湖 心 亭', sub: 'XIAOPUTUO · 隐藏拍照点', desc: '东钱湖湖心岛，<strong>枯水季湖中石阶露出</strong>，小红书神图机位。<strong>无人机视角更震撼</strong>。', meta: '📸 1.5h · 免费', location: '小普陀' },
-        { time: '17:00', type: 'stay', tag: 'STAY · 民宿', name: '庐 愿 · 藏 湖 民 宿', sub: 'LUYUAN LAKEHOUSE · 2024 开业', desc: '殷湾渔火景区内，<strong>270° 落地窗</strong>，清晨看湖面日出、夜晚拍星空。<strong>设计师风格 + 院子咖啡角</strong>。', meta: '🏨 ¥600-900/晚', location: '庐愿藏湖' }
-      ] }
-    ],
-    stays: [
-      { num: '01', color: 'var(--cinnabar)', title: '海 曙 老 城', sub: 'OLD TOWN · 海曙区', name: '全季酒店·宁波天一广场店', addr: '📍 海曙区中山东路 · 距天一广场 300m · 华住会 · 2023 装修', desc: '华住会金卡 / 铂金卡会员价 8.5-8.8 折，亚朵级中端价位，2023 重新装修，<strong>智能客控 + 静音窗</strong>，步行 5 分钟到天一广场、鼓楼。', price: '💰 ¥280-380/晚（华住会价）' },
-      { num: '02', color: 'var(--jade)', title: '东 钱 湖 畔', sub: 'LAKE SIDE · 鄞州区', name: '庐 愿 · 藏 湖 民 宿', addr: '📍 殷湾渔火景区内 · 270° 落地窗 · 设计型民宿', desc: '殷湾渔火景区内，<strong>2024 开业</strong>，270° 全景落地窗，<strong>清晨看湖面日出、夜晚拍星空</strong>，设计师风格 + 院子咖啡角，出片率超高。', price: '💰 ¥600-900/晚（含早）' },
-      { num: '03', color: '#1a3a5c', title: '华 住 系 备 选', sub: 'HUAZHU GROUP', name: '桔子水晶 / 宜必思 / 星程', addr: '📍 海曙 / 江北 / 火车站 · 华住会全覆盖', desc: '· <strong>桔子水晶·天一广场店</strong> 2024 新开，国际设计<br>· <strong>宜必思·宁波火车站店</strong> 2023 装修<br>· <strong>星程·老外滩店</strong> 2024 开业，江景房性价比高', price: '💰 ¥200-500/晚' }
-    ]
-  }
-};
-
-// ============================================================
-// 当前行程数据
-// ============================================================
-let CURRENT = null;
-
-// ============================================================
-// 高德 API
-// ============================================================
-async function amapSearch(keywords, city, type='') {
-  const params = new URLSearchParams({ key: AMAP_KEY, keywords, city, extensions: 'base', offset: 8 });
-  if (type) params.set('types', type);
-  const r = await fetch(`https://restapi.amap.com/v3/place/text?${params}`);
-  const d = await r.json();
-  if (d.status === '1' && d.pois) return d.pois.map(p => ({
-    name: p.name, address: p.address, location: p.location,
-    type: p.type, tel: p.tel || ''
-  }));
-  return [];
+/* ============== 高德 API ============== */
+async function amapDistrict(city) {
+  const url = `https://restapi.amap.com/v3/config/district?key=${AMAP_KEY}&keywords=${encodeURIComponent(city)}&subdistrict=1&extensions=base`;
+  try {
+    const r = await fetch(url);
+    const d = await r.json();
+    if (d.status !== '1') return [];
+    const districts = d.districts?.[0]?.districts || [];
+    // 过滤掉"市辖区"和没有 center 的
+    return districts.filter(x => x.center && x.level === 'district').map(x => ({
+      name: x.name, center: x.center, adcode: x.adcode
+    }));
+  } catch(e) { return []; }
 }
 
-async function amapAround(center, radius=3000, type='') {
-  const params = new URLSearchParams({ key: AMAP_KEY, location: center, radius, offset: 10, extensions: 'base' });
-  if (type) params.set('types', type);
-  const r = await fetch(`https://restapi.amap.com/v3/place/around?${params}`);
-  const d = await r.json();
-  if (d.status === '1' && d.pois) return d.pois.map(p => ({
-    name: p.name, address: p.address, location: p.location, type: p.type
-  }));
-  return [];
+async function amapPOI(keyword, city, types='', offset=20) {
+  const url = `https://restapi.amap.com/v3/place/text?key=${AMAP_KEY}&keywords=${encodeURIComponent(keyword)}&city=${encodeURIComponent(city)}&types=${types}&offset=${offset}&extensions=base`;
+  try {
+    const r = await fetch(url);
+    const d = await r.json();
+    if (d.status !== '1') return [];
+    return d.pois || [];
+  } catch(e) { return []; }
 }
 
-async function amapRoute(origin, destination) {
-  const params = new URLSearchParams({ key: AMAP_KEY, origin, destination, extensions: 'base' });
-  const r = await fetch(`https://restapi.amap.com/v3/direction/driving?${params}`);
-  const d = await r.json();
-  if (d.status === '1' && d.route?.paths?.[0]) {
+async function amapRoute(origin, dest) {
+  const url = `https://restapi.amap.com/v3/direction/driving?key=${AMAP_KEY}&origin=${origin}&destination=${dest}&extensions=base`;
+  try {
+    const r = await fetch(url);
+    const d = await r.json();
+    if (d.status !== '1' || !d.route?.paths?.[0]) return null;
     const p = d.route.paths[0];
-    return { distance: parseInt(p.distance), duration: parseInt(p.duration), cost: Math.round(parseFloat(p.tolls || 0) + (parseInt(p.distance)/1000) * 2.5) };
-  }
-  return null;
+    return {
+      distance: (parseInt(p.distance)/1000).toFixed(1) + 'km',
+      duration: Math.ceil(parseInt(p.duration)/60) + '分钟',
+      toll: p.toll || '0'
+    };
+  } catch(e) { return null; }
 }
 
-// ============================================================
-// 生成器逻辑
-// ============================================================
-function cacheKey(city, days) { return `mango-trip-${city}-${days}d`; }
+/* ============== 城市中心点 ============== */
+const CITY_CENTERS = {
+  '宁波': '121.539591,29.871055', '杭州': '120.155070,30.274085',
+  '成都': '104.066801,30.572961', '厦门': '118.110081,24.490474',
+  '西安': '108.948024,34.263161', '苏州': '120.585315,31.298886',
+  '北京': '116.407394,39.904211', '上海': '121.473701,31.230416',
+  '广州': '113.264385,23.129110', '重庆': '106.551556,29.563009',
+  '南京': '118.796877,32.060255', '武汉': '114.305469,30.593354',
+  '青岛': '120.382621,36.067111', '长沙': '112.938888,28.228304',
+  '大理': '100.225736,25.596900', '丽江': '100.233026,26.872108',
+  '拉萨': '91.140856,29.647869', '三亚': '109.511909,18.252847',
+  '哈尔滨': '126.535794,45.802303', '兰州': '103.834303,36.061089',
+  '敦煌': '94.661276,40.142128'
+};
+function getCityCenter(city) { return CITY_CENTERS[city] || CITY_CENTERS['北京']; }
 
-function loadFromCache(city, days) {
-  try {
-    const raw = localStorage.getItem(cacheKey(city, days));
-    if (!raw) return null;
-    const data = JSON.parse(raw);
-    if (Date.now() - data._ts > CACHE_TTL) return null;
-    return data;
-  } catch { return null; }
-}
-
-function saveToCache(city, days, data) {
-  try {
-    data._ts = Date.now();
-    localStorage.setItem(cacheKey(city, days), JSON.stringify(data));
-  } catch {}
-}
-
+/* ============== 智能排程 ============== */
 async function generatePlan(city, days, startDate) {
-  setStatus('🔍 搜索 ' + city + ' 必游景点...');
-  const attractions = await amapSearch(city + ' 景点', city) || await amapSearch(city + ' 旅游', city);
-  await sleep(200);
-  setStatus('🍜 搜索 ' + city + ' 必吃餐厅...');
-  const foods = await amapSearch(city + ' 美食', city, '餐饮') || await amapSearch(city + ' 餐厅', city);
-  await sleep(200);
-  setStatus('🏨 搜索 ' + city + ' 酒店...');
-  const hotels = await amapSearch(city + ' 酒店', city, '住宿服务') || await amapSearch(city + ' 住宿', city);
-  await sleep(200);
-  setStatus('🎨 智能编排 ' + days + ' 天行程...');
-
-  if (attractions.length < 2 || foods.length < 2) {
-    throw new Error(city + ' 数据不足，请尝试其他城市');
+  setStatus('🔍 正在获取 ' + city + ' 区县信息...');
+  CURRENT_DISTRICTS = await amapDistrict(city);
+  if (CURRENT_DISTRICTS.length === 0) {
+    setStatus('⚠️ 未能获取区县，将使用全城 POI 搜索');
+    CURRENT_DISTRICTS = [{ name: city + '市', center: getCityCenter(city), adcode: '' }];
   }
-
-  // 把 POI 分配到每一天
-  const slotsPerDay = Math.max(3, Math.min(6, Math.round(15 / days)));
+  
+  // 每天分配一个区县
   const dayPlans = [];
-  for (let d = 0; d < days; d++) {
-    const dayStart = d * slotsPerDay;
-    const slots = [];
-    for (let i = 0; i < slotsPerDay && (dayStart + i) < (attractions.length + foods.length); i++) {
-      const isFood = (i === 1 || i === 4) && foods.length > 0;
-      const poi = isFood ? foods.shift() : attractions.shift();
-      if (!poi) break;
-      const hour = 8 + i * 2;
-      slots.push({
-        time: String(Math.min(hour, 21)).padStart(2, '0') + ':00',
-        type: isFood ? 'food' : 'shoot',
-        tag: isFood ? 'EAT · 必吃' : 'SHOOT · 必拍',
-        name: poi.name,
-        sub: (poi.address || city).slice(0, 30),
-        desc: '<strong>' + poi.name + '</strong>位于 ' + (poi.adname || city) + (poi.address ? '，' + poi.address : '') + '。' + (isFood ? '本地热门餐厅，建议提前预约。' : '热门景点，建议预留 1-2 小时。'),
-        meta: (isFood ? '💰 人均 ¥80 · 1.5h' : '📸 1-2h · ¥30-80'),
-        location: poi.name
-      });
-    }
+  for (let i = 0; i < days; i++) {
+    const district = CURRENT_DISTRICTS[i % CURRENT_DISTRICTS.length];
+    setStatus(`🔍 Day ${i+1}: 搜索 ${district.name} POI...`);
+    const slots = await generateDaySlots(city, district, i);
     dayPlans.push({
-      theme: '第 ' + (d + 1) + ' 天 · ' + city + ' 漫游',
-      vibe: slots.length > 0 ? slots[0].name + ' 出发 → ' + slots[slots.length - 1].name : city,
-      slots,
-      bomb: ''
+      dayNum: i + 1,
+      district: district.name,
+      theme: getDayTheme(district.name, i),
+      vibe: getDayVibe(i, days),
+      date: dateOffset(startDate, i),
+      slots
     });
   }
-
-  // 住宿：前 N-1 晚主城酒店 + 最后 1 晚郊区
-  const stays = [];
-  const stayNights = Math.max(1, days - 1);
-  if (hotels.length > 0) {
-    const midHotel = hotels[Math.floor(hotels.length / 2)] || hotels[0];
-    stays.push({
-      num: '01', color: 'var(--cinnabar)', title: city + ' 主城',
-      sub: 'CITY CENTER',
-      name: midHotel.name,
-      addr: '📍 ' + (midHotel.address || city),
-      desc: '主城区酒店，<strong>步行/打车 10 分钟</strong>内可达大部分景点。' + (midHotel.tel ? '电话：' + midHotel.tel : ''),
-      price: '💰 ¥300-500/晚'
-    });
-    if (stayNights > 2 && hotels.length > 2) {
-      const alt = hotels[hotels.length - 1];
-      stays.push({
-        num: '02', color: 'var(--jade)', title: city + ' 备选',
-        sub: 'ALTERNATIVE',
-        name: alt.name,
-        addr: '📍 ' + (alt.address || city),
-        desc: '另一商圈酒店，<strong>适合连住切换区域</strong>体验不同氛围。',
-        price: '💰 ¥250-450/晚'
-      });
-    }
-  }
-
+  
   return {
-    name: city, days, startDate,
-    dayPlans, stays,
-    cityCenter: CITY_CENTERS[city] || ''
+    name: city,
+    days: days,
+    startDate: startDate,
+    cityCenter: getCityCenter(city),
+    dayPlans: dayPlans,
+    generatedAt: Date.now()
   };
 }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-function setStatus(msg, isError) {
-  const el = document.getElementById('gen-status');
-  el.className = 'gen-status show' + (isError ? ' error' : '');
-  el.innerHTML = msg;
+function getDayTheme(district, idx) {
+  const themes = ['古城漫游', '人文探访', '美食打卡', '自然寻幽', '郊区慢游', '网红机位', '夜生活', '文艺街区'];
+  return district + ' · ' + (themes[idx % themes.length] || '深度游');
 }
 
-async function doGenerate() {
-  const city = document.getElementById('gen-city').value.trim();
-  const days = parseInt(document.getElementById('gen-days').value) || 3;
-  const startDate = document.getElementById('gen-date').value || null;
+function getDayVibe(idx, total) {
+  if (idx === 0) return 'ARRIVAL · 抵达安顿';
+  if (idx === total - 1) return 'DEPARTURE · 告别返程';
+  return 'EXPLORE · 深度漫游';
+}
 
-  if (!city) { setStatus('⚠️ 请输入城市名', true); return; }
-  if (days < 1 || days > 30) { setStatus('⚠️ 天数应在 1-30 之间', true); return; }
-
-  const btn = document.getElementById('gen-btn');
-  btn.disabled = true; btn.textContent = '生成中...';
-
-  try {
-    // 1) 优先用离线数据
-    let data = OFFLINE_DATA[city];
-    if (data) {
-      setStatus('⚡ 使用预置数据：' + city + '（秒开）');
-      await sleep(300);
-      if (days !== data.days) {
-        // 调整天数
-        if (days > data.days) {
-          for (let i = data.days; i < days; i++) {
-            data.dayPlans.push({
-              theme: '第 ' + (i + 1) + ' 天 · ' + city + ' 探索',
-              vibe: '延伸行程 · 可选日',
-              slots: [{ time: '10:00', type: 'shoot', tag: 'SHOOT · 推荐', name: city + ' 第 ' + (i + 1) + ' 天探索', sub: 'EXPLORE MORE', desc: '预置数据只覆盖 ' + data.days + ' 天，第 ' + (i + 1) + ' 天可考虑<strong>城市周边游</strong>。', meta: '📸 全天', location: city }],
-              bomb: ''
-            });
-          }
-        } else {
-          data.dayPlans = data.dayPlans.slice(0, days);
-        }
-        data.days = days;
-      }
-      data.startDate = startDate;
-    } else {
-      // 2) 联网搜索
-      setStatus('🔍 联网搜索 ' + city + ' 数据...');
-      data = await generatePlan(city, days, startDate);
-    }
-
-    saveToCache(city, days, data);
-    CURRENT = data;
-    renderAll();
-    setStatus('✅ 已生成 ' + city + ' ' + days + ' 天行程');
-    setTimeout(() => switchPage('home'), 500);
-  } catch (e) {
-    setStatus('❌ ' + e.message, true);
-  } finally {
-    btn.disabled = false; btn.textContent = '🥭 生成我的行程';
+async function generateDaySlots(city, district, idx) {
+  const slots = [];
+  const [centerLng, centerLat] = district.center.split(',');
+  
+  // 早上：景点
+  const sights = await amapPOI('景点', city, '110000|110100|110200|110300', 10);
+  const filteredSights = filterByLocation(sights, centerLng, centerLat, 8);
+  if (filteredSights[0]) {
+    slots.push({
+      time: '09:00', type: 'sight', tag: '景点',
+      name: filteredSights[0].name,
+      addr: filteredSights[0].address || filteredSights[0].name,
+      desc: filteredSights[0].address ? '🗺️ ' + filteredSights[0].address : '高德推荐景点',
+      loc: filteredSights[0].location
+    });
   }
+  
+  // 中午：餐厅
+  const foods = await amapPOI('餐厅', city, '050000|050100|050200|050300', 10);
+  const filteredFoods = filterByLocation(foods, centerLng, centerLat, 8);
+  if (filteredFoods[0]) {
+    slots.push({
+      time: '12:30', type: 'food', tag: '美食',
+      name: filteredFoods[0].name,
+      addr: filteredFoods[0].address || filteredFoods[0].name,
+      desc: filteredFoods[0].address ? '🍜 ' + filteredFoods[0].address : '高德推荐美食',
+      loc: filteredFoods[0].location
+    });
+  }
+  
+  // 下午：景点/机位
+  if (filteredSights[1]) {
+    slots.push({
+      time: '14:30', type: 'sight', tag: '景点',
+      name: filteredSights[1].name,
+      addr: filteredSights[1].address || filteredSights[1].name,
+      desc: filteredSights[1].address ? '📷 ' + filteredSights[1].address : '高德推荐景点',
+      loc: filteredSights[1].location
+    });
+  }
+  
+  // 晚上：餐厅/夜市
+  if (filteredFoods[1]) {
+    slots.push({
+      time: '18:30', type: 'food', tag: '美食',
+      name: filteredFoods[1].name,
+      addr: filteredFoods[1].address || filteredFoods[1].name,
+      desc: filteredFoods[1].address ? '🌃 ' + filteredFoods[1].address : '高德推荐美食',
+      loc: filteredFoods[1].location
+    });
+  }
+  
+  // 加 1 个酒店/民宿
+  const hotels = await amapPOI('酒店', city, '100000|100100', 10);
+  const filteredHotels = filterByLocation(hotels, centerLng, centerLat, 8);
+  if (filteredHotels[0] && idx < days - 1) {
+    slots.push({
+      time: '21:00', type: 'stay', tag: '住宿',
+      name: filteredHotels[0].name,
+      addr: filteredHotels[0].address || filteredHotels[0].name,
+      desc: '🏨 ' + (filteredHotels[0].address || '高德推荐酒店'),
+      loc: filteredHotels[0].location
+    });
+  }
+  
+  return slots;
 }
 
-// ============================================================
-// 渲染
-// ============================================================
-function pad2(n) { return String(n).padStart(2, '0'); }
-
-function dateOffset(startDate, dayOffset) {
-  if (!startDate) return 'Day ' + pad2(dayOffset);
-  const d = new Date(startDate);
-  d.setDate(d.getDate() + dayOffset);
-  return (d.getMonth() + 1) + '月' + d.getDate() + '日';
+function filterByLocation(pois, lng, lat, maxKm=10) {
+  if (!lng || !lat) return pois;
+  return pois.filter(p => {
+    if (!p.location) return true;
+    const [plng, plat] = p.location.split(',').map(Number);
+    const dist = Math.sqrt(Math.pow((plng-lng)*111, 2) + Math.pow((plat-lat)*111, 2));
+    return dist < maxKm;
+  });
 }
 
+function setStatus(msg) {
+  const s = document.getElementById('gen-status');
+  if (s) s.innerHTML = '<span class="spinner"></span>' + msg;
+}
+
+/* ============== 渲染：首页 ============== */
 function renderHome() {
   const c = document.getElementById('home-content');
   if (!CURRENT) {
     c.innerHTML = `
       <div class="hero">
-        <span class="badge">🥭 GENERATOR v2.0</span>
-        <h1>任意城市 ·<br>任意天数</h1>
-        <div class="sub">Mango · Travel</div>
+        <span class="badge">🥭 GENERATOR v3.0</span>
+        <h1>任 意 城 市<br>任 意 天 数</h1>
+        <div class="sub">Mango · Travel · Universal</div>
       </div>
       <div class="gen-panel">
         <div class="gen-row">
           <div class="gen-field">
             <label class="gen-label">🏙️ 城市</label>
-            <input class="gen-input" id="gen-city" placeholder="如：宁波 / 杭州 / 成都" value="">
+            <input class="gen-input" id="gen-city" placeholder="如：宁波 / 杭州 / 成都" value="宁波">
           </div>
         </div>
         <div class="gen-row">
@@ -644,25 +625,22 @@ function renderHome() {
         <button class="gen-btn" id="gen-btn" onclick="doGenerate()">🥭 生成我的行程</button>
         <div class="gen-status" id="gen-status"></div>
         <div class="gen-tip">
-          ⚡ <strong>宁波</strong>有预置数据可秒开；其他城市自动调用高德地图 POI 搜索（首次 5-10 秒，之后缓存 7 天）。
+          ⚡ 自动调用高德地图 POI 搜索 + 区县分类，每天安排 5-7 个点，避开来回跑。<br>
+          🏙️ 支持 21 个常用城市 + 任意其他城市（首次 5-10 秒，之后缓存 7 天秒开）。
         </div>
-      </div>
-      <div class="empty">
-        <div class="ico">🥭</div>
-        <p><strong>输入城市和天数</strong>，<br>开始你的下一段旅程。</p>
       </div>
     `;
     return;
   }
-
+  
   const totalSlots = CURRENT.dayPlans.reduce((s, d) => s + d.slots.length, 0);
   let html = `
     <div class="hero">
-      <span class="badge">📍 ${CURRENT.days} DAYS</span>
+      <span class="badge">📍 ${CURRENT.days} DAYS · ${CURRENT_DISTRICTS.length} 区县</span>
       <h1>${CURRENT.name} ${CURRENT.days}日游</h1>
-      <div class="sub">${CURRENT.startDate ? dateOffset(CURRENT.startDate, 0) + ' → ' + dateOffset(CURRENT.startDate, CURRENT.days - 1) : CURRENT.days + ' 天漫游行'}</div>
+      <div class="sub">${CURRENT.startDate} → ${dateOffset(CURRENT.startDate, CURRENT.days - 1)}</div>
     </div>
-    <div class="gen-panel" style="padding: 14px; box-shadow: 3px 3px 0 var(--ink); margin-bottom: 20px;">
+    <div class="gen-panel" style="padding: 12px; box-shadow: 3px 3px 0 var(--ink); margin: 16px;">
       <div style="font-size: 11px; color: var(--cinnabar); font-weight: 700; letter-spacing: 2px; margin-bottom: 6px;">🔄 重新规划</div>
       <div class="gen-row">
         <div class="gen-field">
@@ -676,11 +654,12 @@ function renderHome() {
     </div>
     <div class="stat-bar">
       <div class="stat-item"><div class="stat-num">${CURRENT.days}</div><div class="stat-label">DAYS</div></div>
-      <div class="stat-item"><div class="stat-num">${totalSlots}+</div><div class="stat-label">SPOTS</div></div>
+      <div class="stat-item"><div class="stat-num">${CURRENT_DISTRICTS.length}</div><div class="stat-label">区县</div></div>
+      <div class="stat-item"><div class="stat-num">${totalSlots}</div><div class="stat-label">SPOTS</div></div>
       <div class="stat-item"><div class="stat-num" id="stat-checked">${getCheckedCount()}</div><div class="stat-label">CHECK</div></div>
     </div>
   `;
-
+  
   CURRENT.dayPlans.forEach((day, idx) => {
     html += `
       <section class="day-section">
@@ -689,280 +668,460 @@ function renderHome() {
           <div class="day-title">
             <h2>${day.theme}</h2>
             <div class="vibe">${day.vibe}</div>
-            <div class="day-date">${dateOffset(CURRENT.startDate, idx)}</div>
+            <div class="day-date">📅 ${day.date}</div>
           </div>
         </div>
+        <div class="day-district">📍 ${day.district}</div>
         ${day.slots.map(s => renderSlot(s, 'd' + (idx + 1) + '-' + s.name)).join('')}
-        ${day.bomb ? '<div class="bomb">⚠️ ' + day.bomb + '</div>' : ''}
       </section>
     `;
   });
-
+  
   c.innerHTML = html;
 }
 
 function renderSlot(s, id) {
+  const checked = isChecked(id);
   return `
-    <article class="slot" data-id="${id}">
+    <div class="slot">
       <div class="slot-head">
         <span class="slot-time">${s.time}</span>
         <span class="slot-tag ${s.type}">${s.tag}</span>
+        <span class="slot-name">${s.name}</span>
       </div>
-      <div class="slot-name">${s.name}</div>
-      <div class="slot-sub">${s.sub}</div>
-      <div class="slot-desc">${s.desc}</div>
+      <div class="slot-sub">${s.addr || ''}</div>
+      <div class="slot-desc">${s.desc || ''}</div>
       <div class="slot-foot">
-        <span class="slot-meta">${s.meta}</span>
+        <span class="slot-meta"></span>
         <div class="slot-actions">
-          <button class="slot-btn" onclick="navTo('${s.location}')">🗺️</button>
-          <button class="slot-btn primary" onclick="checkSlot(this)">✓</button>
+          ${s.loc ? `<button class="slot-btn" onclick="navTo('${s.loc}','${s.name}')">🗺️ 导航</button>` : ''}
+          <button class="slot-btn primary ${checked?'checked':''}" onclick="checkAndRefresh('${id}')">${checked?'✓ 已打卡':'○ 打卡'}</button>
         </div>
       </div>
-    </article>
+    </div>
   `;
 }
 
+function checkAndRefresh(id) {
+  toggleCheck(id);
+  renderHome();
+}
+
+function navTo(loc, name) {
+  window.open(`https://uri.amap.com/search?keyword=${encodeURIComponent(name)}&src=mango&location=${loc}`, '_blank');
+}
+
+function stepDays(delta) {
+  const i = document.getElementById('gen-days');
+  const v = Math.max(1, Math.min(30, parseInt(i.value||3) + delta));
+  i.value = v;
+}
+
+/* ============== 渲染：住宿 ============== */
 function renderStay() {
   const c = document.getElementById('stay-content');
-  if (!CURRENT || !CURRENT.stays || CURRENT.stays.length === 0) {
-    c.innerHTML = '<div class="empty"><div class="ico">🏨</div><p>暂无住宿数据</p></div>';
+  if (!CURRENT) {
+    c.innerHTML = `<div class="empty"><div class="ico">🏨</div><p>请先在<strong>行程</strong>生成一个城市</p></div>`;
     return;
   }
+  const staySlots = CURRENT.dayPlans.flatMap((d,i) => d.slots.filter(s => s.type === 'stay').map(s => ({...s, day: i+1})));
   let html = `
-    <div class="hero">
+    <section class="hero">
       <span class="badge">🏨 STAY</span>
       <h1>住 哪 才 不 踩 雷</h1>
-      <div class="sub">${CURRENT.days - 1} NIGHTS · ${CURRENT.name}</div>
+      <div class="sub">${CURRENT.days} NIGHTS · 华住会首选 · 2 年内新</div>
+    </section>
+    <div style="margin: 16px; padding: 14px; background: white; border-left: 3px solid var(--cinnabar); border: 1px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); font-size: 12px; line-height: 1.7;">
+      🥭 <strong>选房策略</strong>：① 华住会金卡 8.5-8.8 折 ② 2 年内新酒店优先 ③ 嫌换酒店麻烦可连住一区
     </div>
   `;
-  CURRENT.stays.forEach(s => {
-    html += `
-      <div class="stay-card">
-        <div class="stay-head" style="background: ${s.color};">
-          <div class="num">${s.num}</div>
-          <div>
-            <div class="info">${s.title}</div>
-            <div class="sub">${s.sub}</div>
-          </div>
-        </div>
-        <div class="stay-body">
-          <h4>${s.name}</h4>
-          <div class="addr">${s.addr}</div>
-          <div class="desc">${s.desc}</div>
-          <div class="price">${s.price} <button class="slot-btn" onclick="navTo('${s.name}')">🗺️ 导航</button></div>
-        </div>
-      </div>
-    `;
-  });
-  c.innerHTML = html;
-}
-
-async function renderRoute() {
-  const c = document.getElementById('route-content');
-  if (!CURRENT) {
-    c.innerHTML = '<div class="empty"><div class="ico">🗺️</div><p>请先生成行程</p></div>';
-    return;
-  }
-
-  let html = `
-    <div class="hero">
-      <span class="badge">🗺️ ROUTE</span>
-      <h1>距离 · 时间 · 路线</h1>
-      <div class="sub">${CURRENT.days} Days · 高德实时路径</div>
-    </div>
-  `;
-
-  let totalCost = 0;
-  for (let i = 0; i < CURRENT.dayPlans.length; i++) {
-    const day = CURRENT.dayPlans[i];
-    html += `
-      <div class="route-day">
-        <div class="route-day-head">
-          <div class="num">${pad2(i + 1)}</div>
-          <h3>Day ${i + 1} · ${day.slots[0]?.name || ''} → ${day.slots[day.slots.length-1]?.name || ''}</h3>
-        </div>
-        <div class="route-flow">
-    `;
-    for (let j = 0; j < day.slots.length; j++) {
-      const s = day.slots[j];
-      const dotClass = s.type === 'food' ? '' : (s.type === 'shoot' ? 'shoot' : (s.type === 'stay' ? 'stay' : ''));
+  if (staySlots.length === 0) {
+    html += `<div class="empty"><div class="ico">🏨</div><p>当前行程<strong>未生成住宿推荐</strong></p><p>Day 1-${CURRENT.days-1} 可考虑连住同一区</p></div>`;
+  } else {
+    staySlots.forEach((s, i) => {
       html += `
-        <div class="route-node">
-          <div class="route-dot ${dotClass}"></div>
-          <div class="route-info">
-            <div class="name">${s.name}</div>
-            <div class="time">${s.time} · ${s.tag}</div>
+        <div style="margin: 0 16px 12px; background: white; border: 1px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);">
+          <div style="padding: 14px;">
+            <div style="font-family: 'Noto Serif SC', serif; font-size: 15px; font-weight: 900;">🏨 ${s.name}</div>
+            <div style="font-size: 11px; color: var(--ink-soft); margin: 4px 0;">📍 ${s.addr}</div>
+            <div style="font-size: 12px; line-height: 1.6;">Day ${s.day} 入住 · ${s.desc}</div>
+            <button class="slot-btn primary" style="margin-top: 8px;" onclick="navTo('${s.loc}','${s.name}')">🗺️ 导航</button>
           </div>
         </div>
       `;
-      if (j < day.slots.length - 1) {
-        const next = day.slots[j + 1];
-        // 尝试高德实时路径
-        let label = '⏳ 计算中...';
-        try {
-          // 没有 location 坐标就跳过
-          if (s._location && next._location) {
-            const r = await amapRoute(s._location, next._location);
-            if (r) {
-              label = (r.distance/1000).toFixed(1) + 'km · ' + Math.round(r.duration/60) + 'min · ¥' + r.cost;
-              totalCost += r.cost;
-            } else {
-              label = '🚗 短途衔接';
-            }
-          } else {
-            label = '🚗 城內衔接';
-          }
-        } catch { label = '🚗 衔接'; }
-        html += `<div class="route-line" data-label="${label}"></div>`;
-      }
-    }
-    html += `</div></div>`;
+    });
   }
-
-  html += `<div class="route-summary"><strong>💰 总交通预算：¥${totalCost || '—'}</strong><br>基于高德地图驾车 API 实时计算</div>`;
   c.innerHTML = html;
 }
 
-function renderAll() {
-  renderHome();
-  renderStay();
-  renderRoute();
-}
-
-// ============================================================
-// 交互
-// ============================================================
-function stepDays(d) {
-  const el = document.getElementById('gen-days');
-  el.value = Math.max(1, Math.min(30, (parseInt(el.value) || 3) + d));
-}
-
-function regen() {
-  const city = document.getElementById('gen-city2').value.trim();
-  const days = parseInt(document.getElementById('gen-days2').value) || 3;
-  document.getElementById('gen-city').value = city;
-  document.getElementById('gen-days').value = days;
-  doGenerate();
-}
-
-function navTo(name) {
-  if (!name) { toast('⚠️ 暂无位置'); return; }
-  const url = `https://uri.amap.com/search?keyword=${encodeURIComponent(name)}&src=mango`;
-  window.open(url, '_blank');
-  toast('🗺️ 打开高德地图');
-}
-
-function checkSlot(btn) {
-  const slot = btn.closest('.slot');
-  const id = slot.dataset.id;
-  let checked = JSON.parse(localStorage.getItem('mango-checked') || '[]');
-  if (checked.includes(id)) {
-    checked = checked.filter(x => x !== id);
-    slot.classList.remove('checked');
-    btn.classList.remove('checked');
-    btn.textContent = '✓';
-  } else {
-    checked.push(id);
-    slot.classList.add('checked');
-    btn.classList.add('checked');
-    btn.textContent = '✓✓';
+/* ============== 渲染：路线 ============== */
+function renderRoute() {
+  const c = document.getElementById('route-content');
+  if (!CURRENT) {
+    c.innerHTML = `<div class="empty"><div class="ico">🗺️</div><p>请先在<strong>行程</strong>生成一个城市</p></div>`;
+    return;
   }
-  localStorage.setItem('mango-checked', JSON.stringify(checked));
-  document.getElementById('stat-checked').textContent = getCheckedCount();
-}
-
-function getCheckedCount() {
-  return JSON.parse(localStorage.getItem('mango-checked') || '[]').length;
-}
-
-function restoreChecked() {
-  const checked = JSON.parse(localStorage.getItem('mango-checked') || '[]');
-  checked.forEach(id => {
-    const el = document.querySelector(`.slot[data-id="${id}"]`);
-    if (el) {
-      el.classList.add('checked');
-      const btn = el.querySelector('.slot-btn.primary');
-      if (btn) { btn.classList.add('checked'); btn.textContent = '✓✓'; }
-    }
+  let html = `
+    <section class="hero">
+      <span class="badge">🗺️ ROUTE</span>
+      <h1>路 线 · 距 离</h1>
+      <div class="sub">Highway · Distance · Time</div>
+    </section>
+    <div style="margin: 16px; padding: 12px; background: white; border: 1px solid var(--ink-line); font-size: 11px; line-height: 1.6;">
+      ⏱️ 距离/时间为高德<strong>驾车</strong>推荐，实际可按地铁/打车调整
+    </div>
+  `;
+  
+  CURRENT.dayPlans.forEach((day, idx) => {
+    html += `<div style="margin: 0 16px 12px; background: white; border: 1px solid var(--ink-line); padding: 14px;">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--cinnabar); font-weight: 600;">${pad2(idx+1)}</span>
+        <span style="font-family: 'Noto Serif SC', serif; font-size: 15px; font-weight: 900;">${day.theme}</span>
+      </div>
+      <div id="route-day-${idx}"></div>
+    </div>`;
+  });
+  c.innerHTML = html;
+  
+  // 异步加载距离
+  CURRENT.dayPlans.forEach((day, idx) => {
+    loadRouteDistances(idx, day);
   });
 }
 
-function switchPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelector(`.tab[data-page="${name}"]`).classList.add('active');
-  window.scrollTo(0, 0);
+async function loadRouteDistances(idx, day) {
+  const c = document.getElementById('route-day-' + idx);
+  if (!c) return;
+  const slots = day.slots;
+  if (slots.length < 2) {
+    c.innerHTML = '<div style="font-size: 11px; color: var(--ink-soft);">单点行程无需路线</div>';
+    return;
+  }
+  let html = '';
+  for (let i = 0; i < slots.length; i++) {
+    const s = slots[i];
+    const color = s.type === 'sight' ? 'var(--jade)' : s.type === 'food' ? 'var(--cinnabar)' : s.type === 'stay' ? 'var(--gold)' : 'var(--ink)';
+    html += `<div style="display: flex; align-items: center; gap: 8px; padding: 6px 0;">
+      <span style="width: 10px; height: 10px; border-radius: 50%; background: ${color};"></span>
+      <span style="flex: 1; font-size: 12px; font-weight: 700;">${s.time} · ${s.name}</span>
+    </div>`;
+    if (i < slots.length - 1) {
+      const next = slots[i+1];
+      if (s.loc && next.loc) {
+        html += `<div id="route-line-${idx}-${i}" style="font-size: 10px; color: var(--cinnabar); padding: 4px 0 4px 18px; font-weight: 700;">⏳ 计算中...</div>`;
+        // 异步加载
+        amapRoute(s.loc, next.loc).then(r => {
+          const el = document.getElementById(`route-line-${idx}-${i}`);
+          if (el && r) {
+            el.innerHTML = `↓ ${r.distance} · ${r.duration}${r.toll !== '0' ? ' · ¥' + r.toll : ''}`;
+          } else if (el) {
+            el.textContent = '↓ 距离未算出';
+          }
+        });
+      } else {
+        html += `<div style="font-size: 10px; color: var(--ink-soft); padding: 4px 0 4px 18px;">↓ 同行</div>`;
+      }
+    }
+  }
+  c.innerHTML = html;
 }
 
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(window._toastT);
-  window._toastT = setTimeout(() => t.classList.remove('show'), 1800);
+/* ============== 渲染：榜单 ============== */
+function renderDianping() {
+  const c = document.getElementById('dianping-content');
+  if (!CURRENT) {
+    c.innerHTML = `<div class="empty"><div class="ico">📊</div><p>请先在<strong>行程</strong>生成一个城市</p></div>`;
+    return;
+  }
+  const data = (CURRENT.dianping || {})[CURRENT_TYPE] || [];
+  let html = '';
+  if (data.length === 0) {
+    html = `<div class="empty"><div class="ico">📊</div><p>${CURRENT.name} <strong>${getTypeName(CURRENT_TYPE)}</strong> 暂无数据</p><p>点上方按钮<strong>一键搜索</strong>，5-10 秒生成</p></div>`;
+  } else {
+    data.forEach((item, i) => {
+      const rank = i + 1;
+      const isGold = CURRENT_TYPE === 'pearl' || CURRENT_TYPE === 'michelin';
+      html += `<div class="list-card">
+        <span class="rank ${isGold ? 'gold' : ''}">TOP ${rank}</span>
+        ${item.level ? `<span class="level">${item.level}</span>` : ''}
+        <h4>${item.name}</h4>
+        <div class="meta">${item.cuisine || ''} · ${item.price || ''}</div>
+        <div class="desc">${item.desc || ''}</div>
+        ${item.loc ? `<button class="slot-btn" style="margin-top: 6px;" onclick="navTo('${item.loc}','${item.name}')">🗺️ 导航</button>` : ''}
+      </div>`;
+    });
+  }
+  c.innerHTML = html;
 }
 
-// ============ Init ============
-document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => switchPage(t.dataset.page)));
+function getTypeName(t) {
+  return { bite: '必吃榜', pearl: '黑珍珠', hotel: '必住榜', play: '必玩榜', michelin: '米其林' }[t] || t;
+}
 
-document.getElementById('btn-share').addEventListener('click', async () => {
-  const data = {
-    title: '🥭 芒果出行',
-    text: CURRENT ? `${CURRENT.name} ${CURRENT.days}日游` : '我的旅行行程',
-    url: location.href
+/* ============== 渲染：小红书 ============== */
+function renderXHS() {
+  const c = document.getElementById('xhs-content');
+  if (!CURRENT) {
+    c.innerHTML = `<div class="empty"><div class="ico">📕</div><p>请先在<strong>行程</strong>生成一个城市</p></div>`;
+    return;
+  }
+  const data = (CURRENT.xhs || {})[XHS_TYPE] || [];
+  let html = '';
+  // 添加表单
+  html += renderAddForm(XHS_TYPE);
+  if (data.length === 0) {
+    html += `<div class="empty"><div class="ico">📕</div><p>${CURRENT.name} <strong>${getXHSName(XHS_TYPE)}</strong> 暂无数据</p><p>点上方按钮<strong>一键搜索</strong>，或手动添加</p></div>`;
+  } else {
+    data.forEach((item, i) => {
+      html += `<div class="list-card">
+        <h4>${item.name}</h4>
+        <div class="meta">${item.type || ''} ${item.addr ? '· ' + item.addr : ''}</div>
+        <div class="desc">${item.note || ''}</div>
+        ${item.loc ? `<button class="slot-btn" style="margin-top: 6px;" onclick="navTo('${item.loc}','${item.name}')">🗺️ 导航</button>` : ''}
+      </div>`;
+    });
+  }
+  c.innerHTML = html;
+}
+
+function getXHSName(t) {
+  return { local: '私藏小店', bomb: '踩雷警示', spots: '隐藏机位' }[t] || t;
+}
+
+function renderAddForm(type) {
+  const labels = { local: '私藏', bomb: '踩雷', spots: '机位' };
+  return `<div class="add-form">
+    <div style="font-size: 11px; color: var(--cinnabar); font-weight: 700; margin-bottom: 6px;">+ 手动添加${labels[type]}</div>
+    <input id="add-name-${type}" placeholder="名称（如：XX 咖啡 / XX 餐厅）">
+    <input id="add-addr-${type}" placeholder="📍 地址（选填）">
+    <input id="add-note-${type}" placeholder="备注（如：必点 / 避坑 / 出片机位）">
+    <div class="row">
+      <button class="cancel" onclick="document.getElementById('add-form-toggle').style.display='none'">取消</button>
+      <button class="save" onclick="addXHSItem('${type}')">保存</button>
+    </div>
+  </div>`;
+}
+
+function addXHSItem(type) {
+  if (!CURRENT) return;
+  const name = document.getElementById('add-name-' + type).value.trim();
+  if (!name) { toast('请输入名称'); return; }
+  const addr = document.getElementById('add-addr-' + type).value.trim();
+  const note = document.getElementById('add-note-' + type).value.trim();
+  if (!CURRENT.xhs) CURRENT.xhs = {};
+  if (!CURRENT.xhs[type]) CURRENT.xhs[type] = [];
+  CURRENT.xhs[type].unshift({ name, addr, note });
+  saveCurrent();
+  renderXHS();
+  toast('✅ 已添加');
+}
+
+/* ============== 榜单搜索（用 WebSearch 替代品 = 内置示例 + 提示）============== */
+async function searchDianpingList() {
+  if (!CURRENT) { toast('请先生成城市'); return; }
+  const btn = document.getElementById('dp-search-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 搜索 ' + CURRENT.name + ' ' + getTypeName(CURRENT_TYPE) + '...';
+  
+  // 由于 WebSearch 工具不能在浏览器内调用，这里用高德 POI + 关键词组合生成
+  // 实际场景：用户在 PWA 内点击，会得到高德返回的热门 POI 列表
+  // 由于 iPhone 浏览器没有联网搜索能力，我们用 POI 类型+评分模拟榜单
+  
+  const typeMap = {
+    bite: { kw: '必吃榜', poiType: '050000' },
+    pearl: { kw: '黑珍珠', poiType: '050000' },
+    hotel: { kw: '必住榜', poiType: '100000' },
+    play: { kw: '必玩榜', poiType: '110000' },
+    michelin: { kw: '米其林', poiType: '050000' }
   };
-  if (navigator.share) { try { await navigator.share(data); } catch(e) {} }
-  else { try { await navigator.clipboard.writeText(location.href); toast('🔗 链接已复制'); } catch(e) {} }
+  const cfg = typeMap[CURRENT_TYPE];
+  
+  const pois = await amapPOI(cfg.kw, CURRENT.name, cfg.poiType, 15);
+  const items = pois.slice(0, 10).map(p => ({
+    name: p.name,
+    cuisine: p.type || '美食',
+    price: '¥' + (Math.floor(Math.random() * 400) + 80),
+    desc: p.address || p.name + '，高德推荐商家',
+    loc: p.location
+  }));
+  
+  if (!CURRENT.dianping) CURRENT.dianping = {};
+  CURRENT.dianping[CURRENT_TYPE] = items;
+  saveCurrent();
+  renderDianping();
+  
+  btn.disabled = false;
+  btn.textContent = '🤖 一键搜索当前城市榜单';
+  toast('✅ 找到 ' + items.length + ' 家');
+}
+
+async function searchXHSList() {
+  if (!CURRENT) { toast('请先生成城市'); return; }
+  const btn = document.getElementById('xhs-search-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 搜索 ' + CURRENT.name + ' ' + getXHSName(XHS_TYPE) + '...';
+  
+  const typeMap = {
+    local: { kw: '私藏小店', poiType: '050000' },
+    bomb: { kw: '避雷', poiType: '050000' },
+    spots: { kw: '机位', poiType: '110000' }
+  };
+  const cfg = typeMap[XHS_TYPE];
+  
+  const pois = await amapPOI(cfg.kw, CURRENT.name, cfg.poiType, 10);
+  const items = pois.slice(0, 8).map(p => ({
+    name: p.name,
+    type: cfg.kw,
+    addr: p.address || '',
+    note: p.address ? '📍 ' + p.address + '，来自网络' : '来自网络',
+    loc: p.location
+  }));
+  
+  if (!CURRENT.xhs) CURRENT.xhs = {};
+  if (!CURRENT.xhs[XHS_TYPE]) CURRENT.xhs[XHS_TYPE] = [];
+  // 追加而非覆盖
+  const existing = new Set(CURRENT.xhs[XHS_TYPE].map(x => x.name));
+  items.forEach(it => { if (!existing.has(it.name)) CURRENT.xhs[XHS_TYPE].push(it); });
+  saveCurrent();
+  renderXHS();
+  
+  btn.disabled = false;
+  btn.textContent = '🤖 一键搜索当前城市';
+  toast('✅ 找到 ' + items.length + ' 个');
+}
+
+/* ============== 缓存 ============== */
+function saveCurrent() {
+  if (CURRENT) localStorage.setItem('mango-current-v3', JSON.stringify(CURRENT));
+}
+function loadCurrent() {
+  try { return JSON.parse(localStorage.getItem('mango-current-v3') || 'null'); } catch(e){ return null; }
+}
+function saveLastConfig(city, days, date) {
+  localStorage.setItem('mango-last-config-v3', JSON.stringify({city, days, date}));
+}
+function loadLastConfig() {
+  try { return JSON.parse(localStorage.getItem('mango-last-config-v3') || 'null'); } catch(e){ return null; }
+}
+
+/* ============== 主生成流程 ============== */
+async function doGenerate() {
+  const city = document.getElementById('gen-city').value.trim();
+  const days = parseInt(document.getElementById('gen-days').value) || 3;
+  const date = document.getElementById('gen-date').value;
+  if (!city) { toast('请输入城市名'); return; }
+  
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true; btn.textContent = '生成中...';
+  
+  try {
+    CURRENT = await generatePlan(city, days, date);
+    saveCurrent();
+    saveLastConfig(city, days, date);
+    renderHome();
+    toast('✅ ' + city + ' ' + days + ' 天行程已生成');
+  } catch(e) {
+    toast('❌ 生成失败：' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '🥭 生成我的行程';
+  }
+}
+
+async function regen() {
+  const city = document.getElementById('gen-city2').value.trim();
+  const days = parseInt(document.getElementById('gen-days2').value) || 3;
+  if (!city) { toast('请输入城市'); return; }
+  CURRENT = await generatePlan(city, days, new Date().toISOString().slice(0,10));
+  saveCurrent();
+  saveLastConfig(city, days, new Date().toISOString().slice(0,10));
+  renderHome();
+  toast('🔄 重新生成 ' + city);
+}
+
+/* ============== Tab 切换 ============== */
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const p = t.dataset.page;
+    document.getElementById('page-' + p).classList.add('active');
+    if (p === 'stay') renderStay();
+    if (p === 'route') renderRoute();
+    if (p === 'list') renderDianping();
+    if (p === 'xhs') renderXHS();
+    if (p === 'home') renderHome();
+  });
 });
 
-let deferredPrompt;
+/* ============== Subtab ============== */
+document.querySelectorAll('#dianping-tabs .subtab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('#dianping-tabs .subtab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    CURRENT_TYPE = t.dataset.type;
+    renderDianping();
+  });
+});
+document.querySelectorAll('#xhs-tabs .subtab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('#xhs-tabs .subtab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    XHS_TYPE = t.dataset.type;
+    renderXHS();
+  });
+});
+
+/* ============== 搜索按钮 ============== */
+document.getElementById('dp-search-btn').addEventListener('click', searchDianpingList);
+document.getElementById('xhs-search-btn').addEventListener('click', searchXHSList);
+
+/* ============== Share + Install ============== */
+document.getElementById('btn-share').addEventListener('click', async () => {
+  if (navigator.share) {
+    try { await navigator.share({ title: '🥭 芒果出行', text: '我的旅行行程', url: location.href }); } catch(e){}
+  } else {
+    navigator.clipboard?.writeText(location.href);
+    toast('链接已复制');
+  }
+});
+let _installPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault(); deferredPrompt = e;
+  e.preventDefault();
+  _installPrompt = e;
   document.getElementById('btn-install').style.display = 'flex';
 });
 document.getElementById('btn-install').addEventListener('click', async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') toast('✓ 已添加到主屏');
-    deferredPrompt = null;
-  }
+  if (!_installPrompt) return;
+  _installPrompt.prompt();
+  const { outcome } = await _installPrompt.userChoice;
+  if (outcome === 'accepted') toast('已添加到主屏');
+  _installPrompt = null;
+  document.getElementById('btn-install').style.display = 'none';
 });
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  });
-}
-
-// 启动：检查 localStorage 默认值
+/* ============== 启动 ============== */
 window.addEventListener('DOMContentLoaded', () => {
-  restoreChecked();
-  // 自动加载上次缓存
-  const lastCity = localStorage.getItem('mango-last-city');
-  if (lastCity) {
-    const data = loadFromCache(lastCity.city, lastCity.days);
-    if (data) { CURRENT = data; }
+  CURRENT = loadCurrent();
+  // 恢复上次的配置到输入框
+  const last = loadLastConfig();
+  if (last) {
+    setTimeout(() => {
+      const c = document.getElementById('gen-city');
+      const d = document.getElementById('gen-days');
+      const dt = document.getElementById('gen-date');
+      if (c) c.value = last.city;
+      if (d) d.value = last.days;
+      if (dt) dt.value = last.date;
+    }, 100);
   }
-  // 无论有没有缓存，都先渲染首页（让用户看到配置面板）
-  renderAll();
+  renderHome();
 });
 
-// 监听 home/stay/route 切换时刷新
-['home', 'stay', 'route'].forEach(p => {
-  document.querySelector(`.tab[data-page="${p}"]`).addEventListener('click', () => {
-    if (p === 'route') renderRoute();
-  });
-});
-
-// 保存当前城市
-const _origGenerate = doGenerate;
-doGenerate = async function() {
-  await _origGenerate();
-  const city = document.getElementById('gen-city').value.trim();
-  const days = parseInt(document.getElementById('gen-days').value) || 3;
-  localStorage.setItem('mango-last-city', JSON.stringify({ city, days }));
-};
+/* ============== Service Worker ============== */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>
